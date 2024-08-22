@@ -24,17 +24,10 @@ resources/
 ```
 
 ## Supported operations
-```
-GET /Patient
+- **read**, **create** and **update** operations are supported
+- **search** - limied support without any search params
+- `GET /$index` operation returns a map of all resources in format `<resource_type>:<id>`
 
-GET /Patient/example
-
-POST /Patient
-
-PUT /Patient/new
-
-GET /$index # get a map of all resources in format <resource_type>:<id>
-```
 
 ## How to use?
 1. Organize resources in a directory

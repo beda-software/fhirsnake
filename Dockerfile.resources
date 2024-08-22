@@ -1,0 +1,3 @@
+FROM coralsnake:latest
+
+COPY examples /app/resources

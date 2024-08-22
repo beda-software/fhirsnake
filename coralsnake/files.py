@@ -1,3 +1,4 @@
+import json
 import os
 
 import yaml
@@ -18,13 +19,15 @@ def load_resources_by_ids(abs_path, resource_type):
     path = os.path.join(abs_path, resource_type)
 
     for filename in os.listdir(path):
-        if not filename.endswith(".yaml"):
-            continue
-
-        resource_id = filename[:-5]
-        with open(os.path.join(path, filename)) as f:
-            resource = yaml.safe_load(f)
-            resource["resourceType"] = resource_type
-            resource["id"] = resource_id
-            resources[resource_id] = resource
+        file_ext = filename[-4:]
+        if filename.endswith(".yaml") or filename.endswith(".json"):
+            resource_id = filename[:-5]
+            with open(os.path.join(path, filename)) as f:
+                if file_ext == "yaml":
+                    resource = yaml.safe_load(f)
+                elif file_ext == "json":
+                    resource = json.load(f)
+                resource["resourceType"] = resource_type
+                resource["id"] = resource_id
+                resources[resource_id] = resource
     return resources

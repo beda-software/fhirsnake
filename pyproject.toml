@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "coralsnake"
 version = "0.1.0"
-description = "a minimalistic static files FHIR server"
+description = "A minimalistic FHIR server for resources as files"
 authors = ["Ilya Beda <ilya@beda.software>", "Aleksandr Pavlushkin <aleksandr.p@beda.software>"]
 readme = "README.md"
+homepage = "https://github.com/beda-software/coralsnake/"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -11,6 +12,8 @@ fastapi = "^0.112.1"
 uvicorn = "^0.30.6"
 pyyaml = "^6.0.2"
 
+[tool.poetry.dev-dependencies]
+ruff = "^0.6.2"
 
 [build-system]
 requires = ["poetry-core"]

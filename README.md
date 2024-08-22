@@ -1,4 +1,9 @@
+<img src="coral snake.webp" alt="Example Image" height="200">
+
 # coralsnake: turn static files to a FHIR server
+
+![image](https://img.shields.io/badge/fastapi-109989?style=for-the-badge&logo=FASTAPI&logoColor=white)
+
 
 ## What is it?
 **coralsnake** is a minimalistic FHIR server that serve yaml and json files as FHIR resources
@@ -6,7 +11,7 @@
 ## How it works?
 The server reads all `yaml` and `json` files from `resources` directory.
 Rsources directory should have subdirectories with names equal resource types:
-```
+```markdown
 resources/
 ├── Patient/
 │   ├── example.yaml

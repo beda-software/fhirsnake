@@ -1,3 +1,4 @@
 FROM coralsnake:latest
 
-COPY examples /app/resources
+COPY resources /app/resources
+# The destination should be exactly the same!

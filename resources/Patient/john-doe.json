@@ -1,0 +1,13 @@
+{
+  "resourceType": "Patient",
+  "id": "john-doe",
+  "name": [
+    {
+      "use": "official",
+      "family": "Doe",
+      "given": [
+        "John"
+      ]
+    }
+  ]
+}

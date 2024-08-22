@@ -1,0 +1,10 @@
+resourceType: Questionnaire
+id: example
+status: active
+title: Basic Health Questionnaire
+subjectType:
+- Patient
+item:
+- linkId: '1'
+  text: Do you have any known allergies?
+  type: boolean

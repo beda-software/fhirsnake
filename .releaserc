@@ -8,9 +8,6 @@
     "@semantic-release/github",
     "@semantic-release/git"
   ],
-  "docker": {
-    "name": "bedasoftware/fhirsnake"
-  },
   "github": {
     "assets": [
       {"path": "dist/*.tar.gz", "label": "Source Code"}

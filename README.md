@@ -1,9 +1,8 @@
-<img src="https://raw.githubusercontent.com/beda-software/fhirsnake/main/coral%20snake.webp?token=GHSAT0AAAAAACT54SBRTO57XGPIFDF5HSCEZWIUQJA" alt="fhirsnake Image" height="200">
+<img src="https://github.com/beda-software/fhirsnake/raw/main/coral%20snake.webp" alt="fhirsnake Image" height="200">
 
 # fhirsnake: turn static files to a FHIR server
 
 ![image](https://img.shields.io/badge/fastapi-109989?style=for-the-badge&logo=FASTAPI&logoColor=white)
-
 
 ## What is it?
 **fhirsnake** is a minimalistic FHIR server that serve yaml and json files as FHIR resources
@@ -24,9 +23,10 @@ resources/
 ```
 
 ## Supported operations
+> [!IMPORTANT]
+> All created and updated resources persist in runtime only. All changes are vanished after service restart
+
 - **read**, **create** and **update** operations are supported
-- ❗all created and updated resources persist in runtime only
-- ❗all changes are vanished after service restart
 - **search** - limied support without any search params
 - `GET /$index` operation returns a map of all resources in format `<resource_type>:<id>`
 
@@ -50,18 +50,18 @@ Please, use [Issues](https://github.com/beda-software/fhirsnake/issues)
 
 ## Development
 
-#### Format and fix with ruff
+### Format and fix with ruff
    ```sh
    ruff format
    ruff check . --fix
    ```
 
-#### Issue new version - run [semantic release](https://semantic-release.gitbook.io/semantic-release/usage/installation) locally
+### Issue new version - run [semantic release](https://semantic-release.gitbook.io/semantic-release/usage/installation) locally
    ```sh
    npx semantic-release --no-ci
    ```
 
-#### Publish to pypi
+### Publish to pypi
    ```sh
    poetry build
    poetry publish

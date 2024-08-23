@@ -1,4 +1,4 @@
-FROM fhirsnake:latest
+FROM bedasoftware/fhirsnake:latest
 
 COPY resources /app/resources
 # The destination should be exactly the same!

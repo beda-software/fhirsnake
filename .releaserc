@@ -1,0 +1,23 @@
+{
+  "branches": ["main"],
+  "repositoryUrl": "https://github.com/beda-software/fhirsnake",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    "@semantic-release/github",
+    "@semantic-release/git"
+  ],
+  "docker": {
+    "name": "bedasoftware/fhirsnake"
+  },
+  "github": {
+    "assets": [
+      {"path": "dist/*.tar.gz", "label": "Source Code"}
+    ]
+  },
+  "git": {
+    "assets": ["CHANGELOG.md", "pyproject.toml"],
+    "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+  }
+}

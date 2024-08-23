@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/beda-software/fhirsnake/compare/v1.0.1...v1.0.2) (2024-08-23)
+
+
+### Bug Fixes
+
+* **docs:** Fix repository image ([53292ef](https://github.com/beda-software/fhirsnake/commit/53292ef53a07092c6d292e675ca1286be0e1be0c))
+
 ## [1.0.1](https://github.com/beda-software/fhirsnake/compare/v1.0.0...v1.0.1) (2024-08-23)
 
 

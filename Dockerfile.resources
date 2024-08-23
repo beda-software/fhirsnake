@@ -1,4 +1,4 @@
-FROM coralsnake:latest
+FROM fhirsnake:latest
 
 COPY resources /app/resources
 # The destination should be exactly the same!

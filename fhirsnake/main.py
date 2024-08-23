@@ -9,7 +9,7 @@ from .files import load_resources
 
 logging.basicConfig(level=logging.INFO)
 
-REPOSITORY_URL = "https://github.com/beda-software/coralsnake/"
+REPOSITORY_URL = "https://github.com/beda-software/fhirsnake/"
 
 app = FastAPI()
 

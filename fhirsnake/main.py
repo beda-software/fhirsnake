@@ -50,7 +50,11 @@ def show_index():
 
 
 @app.get("/{resource_type}")
-def read_resources(resource_type: str):
+def read_resources(resource_type: str, _id: str = None):
+    logging.warning("_id %s", _id)
+    if _id:
+        resource = app.state.resources[resource_type].get(_id)
+        return make_bundle([resource] if resource else [])
     return make_bundle([resource for id, resource in app.state.resources.get(resource_type, {}).items()])
 
 

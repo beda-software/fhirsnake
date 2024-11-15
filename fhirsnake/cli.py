@@ -4,7 +4,6 @@ import logging
 
 import ndjson
 import uvicorn
-
 from initial_resources import initial_resources
 
 logging.basicConfig(level=logging.INFO)

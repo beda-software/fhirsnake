@@ -12,4 +12,6 @@ COPY fhirsnake /app
 
 EXPOSE 8000
 
-CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["poetry", "run", "python3", "cli.py"]
+
+CMD ["server"]

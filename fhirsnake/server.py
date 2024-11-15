@@ -1,33 +1,18 @@
 import logging
-import os
-import sys
 import uuid
 
 from fastapi import FastAPI, HTTPException
-from files import load_resources
+from initial_resources import initial_resources
 
 logging.basicConfig(level=logging.INFO)
 
-REPOSITORY_URL = "https://github.com/beda-software/fhirsnake/"
 
 app = FastAPI()
 
 
 @app.on_event("startup")
 async def load_app_data():
-    root_dir = os.path.dirname(os.path.abspath(__name__))
-    logging.warning(root_dir)
-    resource_dir = "resources"
-    resources_abs_path = os.path.join(root_dir, resource_dir)
-
-    if not os.path.isdir(resources_abs_path):
-        logging.error(
-            f"Required directory '{resources_abs_path}' does not exist. \
-            Check {REPOSITORY_URL} for details. Stopping application."
-        )
-        sys.exit(1)
-
-    app.state.resources = load_resources(resources_abs_path)
+    app.state.resources = initial_resources
 
 
 @app.get("/")

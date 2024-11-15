@@ -36,12 +36,16 @@ resources/
 2. Adjust source destination in `Dockerfile.resources` if required
 3. Option A: Run a container
     ```bash
-    docker run -p 8002:8000 -v ./resources:/app/resources  bedasoftware/fhirsnake
+    docker run -p 8002:8000 -v ./resources:/app/resources bedasoftware/fhirsnake
     ```
 3. Option B: Build an image using the base image
     ```bash
     docker build -t fhirsnake-resources:latest -f Dockerfile.resources .
     docker run -p 8000:8000 fhirsnake-resources 
+    ```
+4. Option C: Export resources as .ndjson or ndjson.gz
+    ```bash
+    docker run -v ./resources:/app/resources -v ./output:/output bedasoftware/fhirsnake export --output /output/seeds.ndjson.gz
     ```
    
 ## Contribution and feedback

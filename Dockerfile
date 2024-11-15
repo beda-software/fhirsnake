@@ -9,9 +9,10 @@ RUN pip install poetry
 RUN poetry install --no-root --no-dev
 
 COPY fhirsnake /app
+COPY entrypoint.sh /app
 
 EXPOSE 8000
 
-ENTRYPOINT ["poetry", "run", "python3", "cli.py"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 CMD ["server"]

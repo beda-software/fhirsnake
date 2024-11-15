@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/beda-software/fhirsnake/compare/v1.1.0...v1.2.0) (2024-11-15)
+
+
+### Features
+
+* **cli, export:** re-write using CLI and add export command ([91d1bb5](https://github.com/beda-software/fhirsnake/commit/91d1bb54d339887058c75a98d086b595ca12cc3d))
+
 # [1.1.0](https://github.com/beda-software/fhirsnake/compare/v1.0.2...v1.1.0) (2024-08-26)
 
 

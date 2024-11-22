@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/beda-software/fhirsnake/compare/v1.4.2...v1.4.3) (2024-11-22)
+
+
+### Bug Fixes
+
+* handle parse errors during watch ([f87ae25](https://github.com/beda-software/fhirsnake/commit/f87ae25e2d2fef5e07ef49bcd5624834e1a484fe))
+
 ## [1.4.2](https://github.com/beda-software/fhirsnake/compare/v1.4.1...v1.4.2) (2024-11-22)
 
 

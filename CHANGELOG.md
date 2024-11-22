@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/beda-software/fhirsnake/compare/v1.4.1...v1.4.2) (2024-11-22)
+
+
+### Bug Fixes
+
+* handle non-json errors ([924f877](https://github.com/beda-software/fhirsnake/commit/924f87773251434a589129753decd71c6386d072))
+
 ## [1.4.1](https://github.com/beda-software/fhirsnake/compare/v1.4.0...v1.4.1) (2024-11-22)
 
 

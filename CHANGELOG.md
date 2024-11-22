@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/beda-software/fhirsnake/compare/v1.2.0...v1.3.0) (2024-11-22)
+
+
+### Features
+
+* add watch command ([e2ce7a8](https://github.com/beda-software/fhirsnake/commit/e2ce7a8dfda29be12a99cecd339d00628b79f12d))
+
 # [1.2.0](https://github.com/beda-software/fhirsnake/compare/v1.1.0...v1.2.0) (2024-11-15)
 
 

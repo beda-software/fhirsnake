@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/beda-software/fhirsnake/compare/v1.3.1...v1.4.0) (2024-11-22)
+
+
+### Features
+
+* add support for subdirectories ([933596f](https://github.com/beda-software/fhirsnake/commit/933596f2a66dfdd0643cfc4db14127884d2a8415))
+
 ## [1.3.1](https://github.com/beda-software/fhirsnake/compare/v1.3.0...v1.3.1) (2024-11-22)
 
 

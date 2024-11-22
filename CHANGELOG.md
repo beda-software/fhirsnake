@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/beda-software/fhirsnake/compare/v1.4.0...v1.4.1) (2024-11-22)
+
+
+### Bug Fixes
+
+* add beep signal on error and format error ([caa257f](https://github.com/beda-software/fhirsnake/commit/caa257fcfe09c30070ad156b6ecf20803db49d99))
+
 # [1.4.0](https://github.com/beda-software/fhirsnake/compare/v1.3.1...v1.4.0) (2024-11-22)
 
 

@@ -5,6 +5,7 @@ import logging
 import ndjson
 import uvicorn
 from initial_resources import initial_resources
+from watch import start_watcher
 
 logging.basicConfig(level=logging.INFO)
 
@@ -21,6 +22,7 @@ def main() -> None:
         help="Specify the output filename",
     )
 
+    # TODO: add "serve" as alias
     server_parser = subparsers.add_parser("server", help="Run fhirsnake FHIR server")
     server_parser.add_argument(
         "--host",
@@ -35,6 +37,21 @@ def main() -> None:
         help="Port",
     )
 
+    watch_parser = subparsers.add_parser("watch", help="Watch resources changes and send them to FHIR server")
+    watch_parser.add_argument(
+        "--external-fhir-server-url",
+        required=True,
+        type=str,
+        help="External FHIR Server URL",
+    )
+
+    watch_parser.add_argument(
+        "--external-fhir-server-header",
+        required=False,
+        type=str,
+        action="append",
+        help="External FHIR Server header",
+    )
     args = parser.parse_args()
 
     if args.command == "export":
@@ -43,11 +60,20 @@ def main() -> None:
     if args.command == "server":
         server(args.host, args.port)
 
+    if args.command == "watch":
+        watch(args.external_fhir_server_url, args.external_fhir_server_header)
+
 
 def server(host: str, port: int) -> None:
     config = uvicorn.Config("server:app", host=host, port=port)
     server = uvicorn.Server(config)
     server.run()
+
+
+def watch(url: str, headers: list[str] | None):
+    headers = headers or []
+    headers = {v.split(":", 1)[0]: v.split(":", 1)[1] for v in headers}
+    start_watcher(url, headers)
 
 
 def export_resources(output: str) -> None:

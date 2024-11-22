@@ -1,9 +1,11 @@
 # IDE
 .DS_Store
 .idea
+.history
 
 # Build
 dist
 
 # Versioning
 node_modules
+

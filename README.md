@@ -9,7 +9,7 @@
 
 ## How it works?
 The server reads all `yaml` and `json` files from `resources` directory.
-Rsources directory should have subdirectories with names equal resource types:
+Resources directory should have subdirectories with names equal resource types:
 ```markdown
 resources/
 ├── Patient/
@@ -31,22 +31,34 @@ resources/
 - `GET /$index` operation returns a map of all resources in format `<resource_type>:<id>`
 
 
-## How to use?
+## Usage
+
 1. Organize resources in a directory
-2. Adjust source destination in `Dockerfile.resources` if required
-3. Option A: Run a container
+
+### Server
+1. Option A: Run a container
     ```bash
     docker run -p 8002:8000 -v ./resources:/app/resources bedasoftware/fhirsnake
     ```
-3. Option B: Build an image using the base image
+2. Option B: Adjust source destination in `Dockerfile.resources` if required
+2.1. Build an image using the base image
     ```bash
     docker build -t fhirsnake-resources:latest -f Dockerfile.resources .
     docker run -p 8000:8000 fhirsnake-resources 
     ```
-4. Option C: Export resources as .ndjson or ndjson.gz
+
+### Export
+1. Export resources as .ndjson or ndjson.gz
     ```bash
     docker run -v ./resources:/app/resources -v ./output:/output bedasoftware/fhirsnake export --output /output/seeds.ndjson.gz
     ```
+
+### Watch
+1. Watch resources for changes and send as PUT requests to external fhir server
+    ```bash
+    docker run -v ./resources:/app/resources -v ./output:/output bedasoftware/fhirsnake watch --external-fhir-server-url http://localhost:8080 --external-fhir-server-header "Authorization: Token token"
+    ```    
+
    
 ## Contribution and feedback
 Please, use [Issues](https://github.com/beda-software/fhirsnake/issues)

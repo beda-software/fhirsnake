@@ -36,12 +36,11 @@ class FileChangeHandler(FileSystemEventHandler):
     def process_file(self, file_path):
         try:
             resource = load_resource(self.target_dir, file_path)
-        except Exception:
-            logging.exception("Unable to load resource %s", file_path)
+        except Exception as exc:
+            logging.error("Unable to load resource %s:\a\n%s", file_path, exc)
             return
 
         if resource is None:
-            logging.error("Unable to load resource %s", file_path)
             return
 
         resource_type = resource["resourceType"]

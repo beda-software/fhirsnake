@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 
@@ -12,7 +13,12 @@ logging.basicConfig(level=logging.INFO)
 
 class FileChangeHandler(FileSystemEventHandler):
     def __init__(
-        self, target_dir: str, external_fhir_server_url: str, external_fhir_server_headers: dict[str, str], *args, **kwargs
+        self,
+        target_dir: str,
+        external_fhir_server_url: str,
+        external_fhir_server_headers: dict[str, str],
+        *args,
+        **kwargs,
     ) -> None:
         self.target_dir = target_dir
         self.external_fhir_server_url = external_fhir_server_url
@@ -48,7 +54,11 @@ class FileChangeHandler(FileSystemEventHandler):
             )
             if response.status_code >= 400:
                 logging.error(
-                    "Unable to update %s via %s (%s): %s", file_path, url, response.status_code, response.text
+                    "Unable to update %s via %s (%s):\a\n %s",
+                    file_path,
+                    url,
+                    response.status_code,
+                    json.dumps(response.json(), indent=2),
                 )
             else:
                 logging.info("Updated %s via %s (%s)", file_path, url, response.status_code)

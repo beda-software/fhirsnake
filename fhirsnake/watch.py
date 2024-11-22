@@ -47,7 +47,7 @@ class FileChangeHandler(FileSystemEventHandler):
             )
             if response.status_code >= 400:
                 logging.error(
-                    "Unable to update %s via %s (%s): %s", file_path, url, response.status_code, response.text()
+                    "Unable to update %s via %s (%s): %s", file_path, url, response.status_code, response.text
                 )
             else:
                 logging.info("Updated %s via %s (%s)", file_path, url, response.status_code)

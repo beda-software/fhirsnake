@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/beda-software/fhirsnake/compare/v1.3.0...v1.3.1) (2024-11-22)
+
+
+### Bug Fixes
+
+* fix validation error displaying ([b6b5a34](https://github.com/beda-software/fhirsnake/commit/b6b5a34c74e00591eae7d1e5f90ae34b67f5addd))
+
 # [1.3.0](https://github.com/beda-software/fhirsnake/compare/v1.2.0...v1.3.0) (2024-11-22)
 
 

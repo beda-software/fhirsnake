@@ -70,9 +70,8 @@ def server(host: str, port: int) -> None:
     server.run()
 
 
-def watch(url: str, headers: list[str] | None):
-    headers = headers or []
-    headers = {v.split(":", 1)[0]: v.split(":", 1)[1] for v in headers}
+def watch(url: str, headers_list: list[str] | None):
+    headers = {v.split(":", 1)[0]: v.split(":", 1)[1] for v in (headers_list or [])}
     start_watcher(url, headers)
 
 

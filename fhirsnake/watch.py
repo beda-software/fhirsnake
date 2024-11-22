@@ -12,8 +12,9 @@ logging.basicConfig(level=logging.INFO)
 
 class FileChangeHandler(FileSystemEventHandler):
     def __init__(
-        self, external_fhir_server_url: str, external_fhir_server_headers: dict[str, str], *args, **kwargs
+        self, target_dir: str, external_fhir_server_url: str, external_fhir_server_headers: dict[str, str], *args, **kwargs
     ) -> None:
+        self.target_dir = target_dir
         self.external_fhir_server_url = external_fhir_server_url
         self.external_fhir_server_headers = external_fhir_server_headers
         super().__init__(*args, **kwargs)
@@ -28,7 +29,7 @@ class FileChangeHandler(FileSystemEventHandler):
 
     def process_file(self, file_path):
         try:
-            resource = load_resource(file_path)
+            resource = load_resource(self.target_dir, file_path)
         except Exception:
             logging.exception("Unable to load resource %s", file_path)
             return
@@ -56,7 +57,7 @@ class FileChangeHandler(FileSystemEventHandler):
 
 
 def start_watcher(external_fhir_server_url: str, external_fhir_server_headers: dict[str, str]):
-    event_handler = FileChangeHandler(external_fhir_server_url, external_fhir_server_headers)
+    event_handler = FileChangeHandler(RESOURCE_DIR, external_fhir_server_url, external_fhir_server_headers)
     observer = Observer()
     observer.schedule(event_handler, RESOURCE_DIR, recursive=True)
     observer.start()

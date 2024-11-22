@@ -52,13 +52,20 @@ class FileChangeHandler(FileSystemEventHandler):
             response = requests.put(
                 url, json=resource, headers={"Content-Type": "application/json", **self.external_fhir_server_headers}
             )
+
+            formatted_error = response.text
+            try:
+                formatted_error = json.dumps(json.loads(formatted_error), indent=2)
+            except json.JSONDecodeError:
+                pass
+
             if response.status_code >= 400:
                 logging.error(
                     "Unable to update %s via %s (%s):\a\n %s",
                     file_path,
                     url,
                     response.status_code,
-                    json.dumps(response.json(), indent=2),
+                    formatted_error,
                 )
             else:
                 logging.info("Updated %s via %s (%s)", file_path, url, response.status_code)

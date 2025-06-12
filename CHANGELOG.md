@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/beda-software/fhirsnake/compare/v1.4.3...v1.5.0) (2025-06-12)
+
+
+### Features
+
+* add support for env substitution and bundle json ([41e3d03](https://github.com/beda-software/fhirsnake/commit/41e3d033299a01d7a426318f24c4cf8593919a62))
+
 ## [1.4.3](https://github.com/beda-software/fhirsnake/compare/v1.4.2...v1.4.3) (2024-11-22)
 
 

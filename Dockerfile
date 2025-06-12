@@ -6,7 +6,7 @@ COPY pyproject.toml poetry.lock /app/
 
 RUN pip install poetry
 
-RUN poetry install --no-root --no-dev
+RUN poetry install --no-root --without dev
 
 COPY fhirsnake /app
 COPY entrypoint.sh /app

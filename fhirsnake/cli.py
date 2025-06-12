@@ -1,10 +1,12 @@
 import argparse
 import gzip
+import json
 import logging
 
 import ndjson
 import uvicorn
 from initial_resources import initial_resources
+from utils import substitute_env_vars
 from watch import start_watcher
 
 logging.basicConfig(level=logging.INFO)
@@ -15,7 +17,8 @@ def main() -> None:
 
     subparsers = parser.add_subparsers(dest="command", required=True, help="Sub-command to run")
 
-    export_parser = subparsers.add_parser("export", help="Export resources as .ndjson or .ndjson.gz")
+    export_parser = subparsers.add_parser("export", help="Export resources as .json (Bundle) or .ndjson or .ndjson.gz")
+
     export_parser.add_argument(
         "--output",
         required=True,
@@ -76,9 +79,25 @@ def watch(url: str, headers_list: list[str] | None):
 
 
 def export_resources(output: str) -> None:
+    is_ndjson = "ndjson" in output
     gzipped = output.endswith(".gz")
     resources_list = flatten_resources(initial_resources)
-    dumped_resources = ndjson.dumps(resources_list)
+    if is_ndjson:
+        dumped_resources = ndjson.dumps(resources_list)
+    else:
+        dumped_resources = json.dumps(
+            {
+                "resourceType": "Bundle",
+                "type": "transaction",
+                "entry": [
+                    {
+                        "request": {"method": "PUT", "url": f"/{resource['resourceType']}/{resource['id']}"},
+                        "resource": resource,
+                    }
+                    for resource in resources_list
+                ],
+            }
+        )
 
     if gzipped:
         with gzip.open(output, "w+") as f:
@@ -89,7 +108,11 @@ def export_resources(output: str) -> None:
 
 
 def flatten_resources(resources: dict[str, dict[str, dict]]) -> list[dict]:
-    return [resource for by_resource_type in resources.values() for resource in by_resource_type.values()]
+    return [
+        substitute_env_vars(resource)
+        for by_resource_type in resources.values()
+        for resource in by_resource_type.values()
+    ]
 
 
 if __name__ == "__main__":

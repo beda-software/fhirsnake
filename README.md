@@ -23,6 +23,13 @@ resources/
 │       └── questionnaire3.yaml
 ```
 
+## Environment variable substitution
+
+To use environment variables in resources, you can use the syntax `${VAR_NAME}`.
+In the case of missing environment variable, the exception will be raised.
+
+NOTE: The syntax `$VAR` without braces is not supported because it might be used in resources.
+
 ## Supported operations
 > [!IMPORTANT]
 > All created and updated resources persist in runtime only. All changes are vanished after service restart
@@ -49,7 +56,7 @@ resources/
     ```
 
 ### Export
-1. Export resources as .ndjson or ndjson.gz
+1. Export resources as .json (Bundle) or .ndjson or ndjson.gz
     ```bash
     docker run -v ./resources:/app/resources -v ./output:/output bedasoftware/fhirsnake export --output /output/seeds.ndjson.gz
     ```

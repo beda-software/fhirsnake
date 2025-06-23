@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/beda-software/fhirsnake/compare/v1.5.0...v1.5.1) (2025-06-23)
+
+
+### Bug Fixes
+
+* add fullUrl to bundle entries ([d695357](https://github.com/beda-software/fhirsnake/commit/d695357ca500a0dd7a47feed39f5cf9abb160aea))
+
 # [1.5.0](https://github.com/beda-software/fhirsnake/compare/v1.4.3...v1.5.0) (2025-06-12)
 
 

@@ -92,6 +92,7 @@ def export_resources(output: str) -> None:
                 "entry": [
                     {
                         "request": {"method": "PUT", "url": f"/{resource['resourceType']}/{resource['id']}"},
+                        "fullUrl": f"urn:uuid:{resource['resourceType']}:{resource['id']}",
                         "resource": resource,
                     }
                     for resource in resources_list

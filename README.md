@@ -58,14 +58,18 @@ NOTE: The syntax `$VAR` without braces is not supported because it might be used
 ### Export
 1. Export resources as .json (Bundle) or .ndjson or ndjson.gz
     ```bash
-    docker run -v ./resources:/app/resources -v ./output:/output bedasoftware/fhirsnake export --output /output/seeds.ndjson.gz
+    docker run -v ./resources:/app/resources -v ./output:/output bedasoftware/fhirsnake export --external-questionnaire-fce-fhir-converter-url=http://host.docker.internal:3000/to-fhir --output /output/seeds.ndjson.gz
     ```
 
 ### Watch
 1. Watch resources for changes and send as PUT requests to external fhir server
     ```bash
-    docker run -v ./resources:/app/resources -v ./output:/output bedasoftware/fhirsnake watch --external-fhir-server-url http://localhost:8080 --external-fhir-server-header "Authorization: Token token"
+    docker run -v ./resources:/app/resources -v ./output:/output bedasoftware/fhirsnake watch --external-fhir-server-url http://host.docker.internal:8080 --external-fhir-server-header "Authorization: Token token" --external-questionnaire-fce-fhir-converter-url=http://host.docker.internal:3000/to-fhir
     ```    
+
+### Using external questionnaire FCE->FHIR converter
+
+There's an image `bedasoftware/questionnaire-fce-fhir-converter:latest` available that provides `/to-fhir` endpoint that can be used along with `--external-questionnaire-fce-fhir-converter-url` args for watch and export commands.
 
    
 ## Contribution and feedback

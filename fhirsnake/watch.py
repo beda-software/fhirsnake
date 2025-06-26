@@ -3,6 +3,7 @@ import logging
 import time
 
 import requests
+from converter import convert_questionnaire_fce_to_fhir
 from files import load_resource
 from initial_resources import RESOURCE_DIR
 from watchdog.events import FileSystemEventHandler
@@ -17,12 +18,14 @@ class FileChangeHandler(FileSystemEventHandler):
         target_dir: str,
         external_fhir_server_url: str,
         external_fhir_server_headers: dict[str, str],
+        external_questionnaire_fce_fhir_converter_url: str | None,
         *args,
         **kwargs,
     ) -> None:
         self.target_dir = target_dir
         self.external_fhir_server_url = external_fhir_server_url
         self.external_fhir_server_headers = external_fhir_server_headers
+        self.external_questionnaire_fce_fhir_converter_url = external_questionnaire_fce_fhir_converter_url
         super().__init__(*args, **kwargs)
 
     def on_modified(self, event):
@@ -39,6 +42,15 @@ class FileChangeHandler(FileSystemEventHandler):
         except Exception as exc:
             logging.error("Unable to load resource %s:\a\n%s", file_path, exc)
             return
+
+        if self.external_questionnaire_fce_fhir_converter_url:
+            try:
+                resource = convert_questionnaire_fce_to_fhir(
+                    resource, self.external_questionnaire_fce_fhir_converter_url
+                )
+            except Exception as exc:
+                logging.error("Unable to convert resource %s:\a\n%s", file_path, exc)
+                return
 
         if resource is None:
             return
@@ -72,8 +84,17 @@ class FileChangeHandler(FileSystemEventHandler):
             logging.exception("Failed to PUT %s via %s", file_path, url)
 
 
-def start_watcher(external_fhir_server_url: str, external_fhir_server_headers: dict[str, str]):
-    event_handler = FileChangeHandler(RESOURCE_DIR, external_fhir_server_url, external_fhir_server_headers)
+def start_watcher(
+    external_fhir_server_url: str,
+    external_fhir_server_headers: dict[str, str],
+    external_questionnaire_fce_fhir_converter_url: str | None,
+):
+    event_handler = FileChangeHandler(
+        RESOURCE_DIR,
+        external_fhir_server_url,
+        external_fhir_server_headers,
+        external_questionnaire_fce_fhir_converter_url,
+    )
     observer = Observer()
     observer.schedule(event_handler, RESOURCE_DIR, recursive=True)
     observer.start()

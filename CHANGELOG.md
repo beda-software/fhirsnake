@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/beda-software/fhirsnake/compare/v1.5.1...v1.6.0) (2025-06-26)
+
+
+### Features
+
+* add support for external questionnaire fce to fhir converter url ([33270c0](https://github.com/beda-software/fhirsnake/commit/33270c032b113cd9abdf376a15dcbb144fe9dee9))
+
 ## [1.5.1](https://github.com/beda-software/fhirsnake/compare/v1.5.0...v1.5.1) (2025-06-23)
 
 

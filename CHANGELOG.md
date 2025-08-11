@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/beda-software/fhirsnake/compare/v1.6.0...v1.7.0) (2025-08-11)
+
+
+### Features
+
+* convert uri to reference for watch ([ef87899](https://github.com/beda-software/fhirsnake/commit/ef87899ace4c259b60c4c2f336bcdb5d5e6760a3))
+
 # [1.6.0](https://github.com/beda-software/fhirsnake/compare/v1.5.1...v1.6.0) (2025-06-26)
 
 

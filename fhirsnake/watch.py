@@ -6,6 +6,7 @@ import requests
 from converter import convert_questionnaire_fce_to_fhir
 from files import load_resource
 from initial_resources import RESOURCE_DIR
+from utils import replace_urn_uuid_with_reference
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -25,7 +26,9 @@ class FileChangeHandler(FileSystemEventHandler):
         self.target_dir = target_dir
         self.external_fhir_server_url = external_fhir_server_url
         self.external_fhir_server_headers = external_fhir_server_headers
-        self.external_questionnaire_fce_fhir_converter_url = external_questionnaire_fce_fhir_converter_url
+        self.external_questionnaire_fce_fhir_converter_url = (
+            external_questionnaire_fce_fhir_converter_url
+        )
         super().__init__(*args, **kwargs)
 
     def on_modified(self, event):
@@ -43,7 +46,10 @@ class FileChangeHandler(FileSystemEventHandler):
             logging.error("Unable to load resource %s:\a\n%s", file_path, exc)
             return
 
-        if self.external_questionnaire_fce_fhir_converter_url:
+        if (
+            self.external_questionnaire_fce_fhir_converter_url
+            and resource["resourceType"] == "Questionnaire"
+        ):
             try:
                 resource = convert_questionnaire_fce_to_fhir(
                     resource, self.external_questionnaire_fce_fhir_converter_url
@@ -59,9 +65,16 @@ class FileChangeHandler(FileSystemEventHandler):
         resource_id = resource["id"]
         url = f"{self.external_fhir_server_url}/{resource_type}/{resource_id}"
 
+        resource = replace_urn_uuid_with_reference(resource)
+
         try:
             response = requests.put(
-                url, json=resource, headers={"Content-Type": "application/json", **self.external_fhir_server_headers}
+                url,
+                json=resource,
+                headers={
+                    "Content-Type": "application/json",
+                    **self.external_fhir_server_headers,
+                },
             )
 
             formatted_error = response.text
@@ -79,7 +92,9 @@ class FileChangeHandler(FileSystemEventHandler):
                     formatted_error,
                 )
             else:
-                logging.info("Updated %s via %s (%s)", file_path, url, response.status_code)
+                logging.info(
+                    "Updated %s via %s (%s)", file_path, url, response.status_code
+                )
         except requests.RequestException:
             logging.exception("Failed to PUT %s via %s", file_path, url)
 

@@ -1,6 +1,8 @@
 import os
 import re
 
+ALLOWED_KEYS_TO_CONVERT = ["reference", "uri", "fullUrl"]
+
 
 def substitute_env_vars(obj):
     if isinstance(obj, dict):
@@ -28,10 +30,15 @@ def convert_uri_to_reference(uri: str) -> str:
 
 
 def replace_urn_uuid_with_reference(obj):
-    if isinstance(obj, str):
-        return convert_uri_to_reference(obj)
-    elif isinstance(obj, dict):
-        return {k: replace_urn_uuid_with_reference(v) for k, v in obj.items()}
+    if isinstance(obj, dict):
+        return {
+            key: (
+                convert_uri_to_reference(value)
+                if key in ALLOWED_KEYS_TO_CONVERT and isinstance(value, str)
+                else replace_urn_uuid_with_reference(value)
+            )
+            for key, value in obj.items()
+        }
     elif isinstance(obj, list):
         return [replace_urn_uuid_with_reference(item) for item in obj]
     return obj

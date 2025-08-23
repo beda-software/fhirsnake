@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/beda-software/fhirsnake/compare/v1.7.0...v1.8.0) (2025-08-23)
+
+
+### Features
+
+* update logic to conevrt uri to references ([225d199](https://github.com/beda-software/fhirsnake/commit/225d199c4acfd615cabb98dfee6b87ff55904b57))
+
 # [1.7.0](https://github.com/beda-software/fhirsnake/compare/v1.6.0...v1.7.0) (2025-08-11)
 
 

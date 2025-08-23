@@ -65,7 +65,10 @@ class FileChangeHandler(FileSystemEventHandler):
         resource_id = resource["id"]
         url = f"{self.external_fhir_server_url}/{resource_type}/{resource_id}"
 
-        resource = replace_urn_uuid_with_reference(resource)
+        try:
+            resource = replace_urn_uuid_with_reference(resource)
+        except Exception as exc:
+            logging.exception("Failed to convert uris to references: {exc}")
 
         try:
             response = requests.put(

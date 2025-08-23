@@ -1,6 +1,8 @@
 import os
 import re
 
+URN_UUID_CONTAINING_KEYS = ["reference", "uri", "fullUrl"]
+
 
 def substitute_env_vars(obj):
     if isinstance(obj, dict):
@@ -27,11 +29,22 @@ def convert_uri_to_reference(uri: str) -> str:
     return uri
 
 
-def replace_urn_uuid_with_reference(obj):
+def replace_urn_uuid_with_reference(obj, path=None):
+    if path is None:
+        path = []
+
     if isinstance(obj, str):
-        return convert_uri_to_reference(obj)
+        if obj.startswith("urn:uuid:") and path[-1] in URN_UUID_CONTAINING_KEYS:
+            return convert_uri_to_reference(obj)
+        return obj
     elif isinstance(obj, dict):
-        return {k: replace_urn_uuid_with_reference(v) for k, v in obj.items()}
+        return {
+            key: replace_urn_uuid_with_reference(value, path + [key])
+            for key, value in obj.items()
+        }
     elif isinstance(obj, list):
-        return [replace_urn_uuid_with_reference(item) for item in obj]
+        return [
+            replace_urn_uuid_with_reference(item, path + [index])
+            for index, item in enumerate(obj)
+        ]
     return obj

@@ -2,7 +2,7 @@ import logging
 import uuid
 
 from fastapi import FastAPI, HTTPException
-from initial_resources import initial_resources
+from initial_resources import get_initial_resources
 
 logging.basicConfig(level=logging.INFO)
 
@@ -12,7 +12,7 @@ app = FastAPI()
 
 @app.on_event("startup")
 async def load_app_data():
-    app.state.resources = initial_resources
+    app.state.resources = get_initial_resources()
 
 
 @app.get("/")

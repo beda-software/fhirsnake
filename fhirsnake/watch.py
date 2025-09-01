@@ -68,7 +68,7 @@ class FileChangeHandler(FileSystemEventHandler):
         try:
             resource = replace_urn_uuid_with_reference(resource)
         except Exception as exc:
-            logging.exception("Failed to convert uris to references: {exc}")
+            logging.exception("Failed to convert uris to references: %s", exc)
 
         try:
             response = requests.put(

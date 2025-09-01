@@ -17,4 +17,5 @@ if not os.path.isdir(resources_abs_path):
     )
     sys.exit(1)
 
-initial_resources = load_resources(resources_abs_path)
+def get_initial_resources():
+    return load_resources(resources_abs_path)

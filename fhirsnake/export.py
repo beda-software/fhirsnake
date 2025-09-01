@@ -3,14 +3,14 @@ import json
 
 import ndjson
 from converter import convert_resources
-from initial_resources import initial_resources
+from initial_resources import get_initial_resources
 from utils import substitute_env_vars
 
 
 def export_resources(output: str, external_questionnaire_fce_fhir_converter_url: str | None) -> None:
     is_ndjson = "ndjson" in output
     gzipped = output.endswith(".gz")
-    resources_list = flatten_resources(initial_resources)
+    resources_list = flatten_resources(get_initial_resources())
 
     if external_questionnaire_fce_fhir_converter_url:
         resources_list = convert_resources(resources_list, external_questionnaire_fce_fhir_converter_url)

@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/beda-software/fhirsnake/compare/v1.8.0...v1.8.1) (2025-09-01)
+
+
+### Bug Fixes
+
+* do not exit watch-seeds in the case of parsing error ([0033209](https://github.com/beda-software/fhirsnake/commit/0033209f9302b8dd3d86f811a97da80952d2c625)), closes [#10](https://github.com/beda-software/fhirsnake/issues/10)
+
 # [1.8.0](https://github.com/beda-software/fhirsnake/compare/v1.7.0...v1.8.0) (2025-08-23)
 
 

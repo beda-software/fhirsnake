@@ -48,7 +48,7 @@ class FileChangeHandler(FileSystemEventHandler):
 
         if (
             self.external_questionnaire_fce_fhir_converter_url
-            and resource["resourceType"] == "Questionnaire"
+            and resource.get("resourceType") == "Questionnaire"
         ):
             try:
                 resource = convert_questionnaire_fce_to_fhir(

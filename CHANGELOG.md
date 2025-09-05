@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/beda-software/fhirsnake/compare/v1.8.1...v1.9.0) (2025-09-05)
+
+
+### Features
+
+* Substitute env vars in watch mode ([72cfbec](https://github.com/beda-software/fhirsnake/commit/72cfbec2ed534b7791f25b09d2b5a13d4c597eb6))
+
 ## [1.8.1](https://github.com/beda-software/fhirsnake/compare/v1.8.0...v1.8.1) (2025-09-01)
 
 

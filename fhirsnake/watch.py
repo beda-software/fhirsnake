@@ -6,7 +6,7 @@ import requests
 from converter import convert_questionnaire_fce_to_fhir
 from files import load_resource
 from initial_resources import RESOURCE_DIR
-from utils import replace_urn_uuid_with_reference
+from utils import replace_urn_uuid_with_reference, substitute_env_vars
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -70,6 +70,11 @@ class FileChangeHandler(FileSystemEventHandler):
             resource = replace_urn_uuid_with_reference(resource)
         except Exception as exc:
             logging.exception("Failed to convert uris to references: %s", exc)
+
+        try:
+            resource = substitute_env_vars(resource)
+        except Exception as exc:
+            logging.exception("Failed to substitute env vars")
 
         try:
             response = requests.put(

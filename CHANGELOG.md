@@ -1,3 +1,10 @@
+## [1.10.1](https://github.com/beda-software/fhirsnake/compare/v1.10.0...v1.10.1) (2026-01-14)
+
+
+### Bug Fixes
+
+* fix import ([1bfa421](https://github.com/beda-software/fhirsnake/commit/1bfa4213259c6d85c71d54f90966e39807bd0055))
+
 # [1.10.0](https://github.com/beda-software/fhirsnake/compare/v1.9.0...v1.10.0) (2026-01-14)
 
 

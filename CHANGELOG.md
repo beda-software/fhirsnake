@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/beda-software/fhirsnake/compare/v1.9.0...v1.10.0) (2026-01-14)
+
+
+### Features
+
+* add CORS_ALLOW_ALL ([79e10f2](https://github.com/beda-software/fhirsnake/commit/79e10f233bc9b2d153b8980dd73b0a6980a0e539))
+
 # [1.9.0](https://github.com/beda-software/fhirsnake/compare/v1.8.1...v1.9.0) (2025-09-05)
 
 

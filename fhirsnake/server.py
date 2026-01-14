@@ -2,6 +2,7 @@ import logging
 import uuid
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from initial_resources import get_initial_resources
 
 logging.basicConfig(level=logging.INFO)
@@ -9,6 +10,14 @@ logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 
+if os.getenv("CORS_ALLOW_ALL", "false").lower() == "true":
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 @app.on_event("startup")
 async def load_app_data():

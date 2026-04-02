@@ -38,13 +38,7 @@ def replace_urn_uuid_with_reference(obj, path=None):
             return convert_uri_to_reference(obj)
         return obj
     elif isinstance(obj, dict):
-        return {
-            key: replace_urn_uuid_with_reference(value, path + [key])
-            for key, value in obj.items()
-        }
+        return {key: replace_urn_uuid_with_reference(value, path + [key]) for key, value in obj.items()}
     elif isinstance(obj, list):
-        return [
-            replace_urn_uuid_with_reference(item, path + [index])
-            for index, item in enumerate(obj)
-        ]
+        return [replace_urn_uuid_with_reference(item, path + [index]) for index, item in enumerate(obj)]
     return obj

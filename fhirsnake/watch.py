@@ -5,7 +5,7 @@ import time
 import requests
 from converter import convert_questionnaire_fce_to_fhir
 from files import load_resource
-from utils import replace_urn_uuid_with_reference
+from utils import replace_urn_uuid_with_reference, substitute_env_vars
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -39,30 +39,39 @@ class FileChangeHandler(FileSystemEventHandler):
     def process_file(self, file_path):
         try:
             resource = load_resource(self.target_dir, file_path)
-        except Exception as exc:
-            logging.error("Unable to load resource %s:\a\n%s", file_path, exc)
+        except Exception:
+            logging.exception("Unable to load resource %s", file_path)
             return
-
-        if self.external_questionnaire_fce_fhir_converter_url and resource["resourceType"] == "Questionnaire":
-            try:
-                resource = convert_questionnaire_fce_to_fhir(
-                    resource, self.external_questionnaire_fce_fhir_converter_url
-                )
-            except Exception as exc:
-                logging.error("Unable to convert resource %s:\a\n%s", file_path, exc)
-                return
 
         if resource is None:
             return
 
+        if (
+            self.external_questionnaire_fce_fhir_converter_url
+            and resource.get("resourceType") == "Questionnaire"
+        ):
+            try:
+                resource = convert_questionnaire_fce_to_fhir(
+                    resource, self.external_questionnaire_fce_fhir_converter_url
+                )
+            except Exception:
+                logging.exception("Unable to convert resource %s", file_path)
+                return
+
         resource_type = resource["resourceType"]
         resource_id = resource["id"]
+
         url = f"{self.external_fhir_server_url}/{resource_type}/{resource_id}"
 
         try:
             resource = replace_urn_uuid_with_reference(resource)
-        except Exception as exc:
-            logging.exception("Failed to convert uris to references: %s", exc)
+        except Exception:
+            logging.exception("Failed to convert uris to references")
+
+        try:
+            resource = substitute_env_vars(resource)
+        except Exception:
+            logging.exception("Failed to substitute env vars")
 
         try:
             response = requests.put(

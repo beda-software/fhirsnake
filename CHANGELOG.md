@@ -1,3 +1,31 @@
+## [1.10.1](https://github.com/beda-software/fhirsnake/compare/v1.10.0...v1.10.1) (2026-01-14)
+
+
+### Bug Fixes
+
+* fix import ([1bfa421](https://github.com/beda-software/fhirsnake/commit/1bfa4213259c6d85c71d54f90966e39807bd0055))
+
+# [1.10.0](https://github.com/beda-software/fhirsnake/compare/v1.9.0...v1.10.0) (2026-01-14)
+
+
+### Features
+
+* add CORS_ALLOW_ALL ([79e10f2](https://github.com/beda-software/fhirsnake/commit/79e10f233bc9b2d153b8980dd73b0a6980a0e539))
+
+# [1.9.0](https://github.com/beda-software/fhirsnake/compare/v1.8.1...v1.9.0) (2025-09-05)
+
+
+### Features
+
+* Substitute env vars in watch mode ([72cfbec](https://github.com/beda-software/fhirsnake/commit/72cfbec2ed534b7791f25b09d2b5a13d4c597eb6))
+
+## [1.8.1](https://github.com/beda-software/fhirsnake/compare/v1.8.0...v1.8.1) (2025-09-01)
+
+
+### Bug Fixes
+
+* do not exit watch-seeds in the case of parsing error ([0033209](https://github.com/beda-software/fhirsnake/commit/0033209f9302b8dd3d86f811a97da80952d2c625)), closes [#10](https://github.com/beda-software/fhirsnake/issues/10)
+
 # [1.8.0](https://github.com/beda-software/fhirsnake/compare/v1.7.0...v1.8.0) (2025-08-23)
 
 

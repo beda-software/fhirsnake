@@ -4,8 +4,8 @@ import os
 
 import uvicorn
 
-from .export import export_resources
-from .watch import start_watcher
+from export import export_resources
+from watch import start_watcher
 
 logging.basicConfig(level=logging.INFO)
 
@@ -101,7 +101,7 @@ def main() -> None:
 
 
 def server(input_dir: str, host: str, port: int) -> None:
-    from .server import create_app
+    from server import create_app
 
     config = uvicorn.Config(create_app(input_dir), host=host, port=port)
     server = uvicorn.Server(config)

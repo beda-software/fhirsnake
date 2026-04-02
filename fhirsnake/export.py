@@ -3,9 +3,9 @@ import json
 
 import ndjson
 
-from .converter import convert_resources
-from .files import load_resources
-from .utils import substitute_env_vars
+from converter import convert_resources
+from files import load_resources
+from utils import substitute_env_vars
 
 
 def export_resources(

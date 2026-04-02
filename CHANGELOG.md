@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/beda-software/fhirsnake/compare/v1.10.1...v1.11.0) (2026-04-02)
+
+
+### Features
+
+* add support for input dirs (multiple for watch and export) ([885bdaf](https://github.com/beda-software/fhirsnake/commit/885bdaf481c19c345aa313dab1b16e3961ed003f))
+
 ## [1.10.1](https://github.com/beda-software/fhirsnake/compare/v1.10.0...v1.10.1) (2026-01-14)
 
 

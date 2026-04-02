@@ -23,8 +23,6 @@ def create_app(input_dir: str) -> FastAPI:
 
     @app.on_event("startup")
     async def load_app_data():
-        if not os.path.isdir(input_dir):
-            raise RuntimeError(f"Required directory '{input_dir}' does not exist. Stopping application.")
         app.state.resources = load_resources(input_dir)
 
     @app.get("/")

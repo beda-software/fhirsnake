@@ -99,9 +99,16 @@ def main() -> None:
         )
 
 
+def validate_input_dirs(input_dirs: list[str]) -> None:
+    for input_dir in input_dirs:
+        if not os.path.isdir(input_dir):
+            raise RuntimeError(f"Required directory '{input_dir}' does not exist. Stopping application.")
+
+
 def server(input_dir: str, host: str, port: int) -> None:
     from server import create_app
 
+    validate_input_dirs([input_dir])
     config = uvicorn.Config(create_app(input_dir), host=host, port=port)
     server = uvicorn.Server(config)
     server.run()
@@ -112,6 +119,7 @@ def export(
     output: str,
     external_questionnaire_fce_fhir_converter_url: str | None,
 ):
+    validate_input_dirs(input_dirs)
     export_resources(input_dirs, output, external_questionnaire_fce_fhir_converter_url)
 
 
@@ -121,6 +129,7 @@ def watch(
     headers_list: list[str] | None,
     external_questionnaire_fce_fhir_converter_url: str | None,
 ):
+    validate_input_dirs(input_dirs)
     headers = {v.split(":", 1)[0].strip(): v.split(":", 1)[1].strip() for v in (headers_list or [])}
     start_watcher(input_dirs, url, headers, external_questionnaire_fce_fhir_converter_url)
 

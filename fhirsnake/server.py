@@ -4,7 +4,6 @@ import uuid
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-
 from files import load_resources
 
 logging.basicConfig(level=logging.INFO)

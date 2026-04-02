@@ -3,7 +3,6 @@ import logging
 import os
 
 import uvicorn
-
 from export import export_resources
 from watch import start_watcher
 

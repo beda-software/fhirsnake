@@ -8,8 +8,8 @@
 **fhirsnake** is a minimalistic FHIR server that serve yaml and json files as FHIR resources
 
 ## How it works?
-The server reads all `yaml` and `json` files from `resources` directory.
-Resources directory should have subdirectories with names equal resource types:
+The server reads all `yaml` and `json` files from an input directory (`resources` by default).
+The input directory should have subdirectories with names equal to resource types:
 ```markdown
 resources/
 ├── Patient/
@@ -19,9 +19,11 @@ resources/
 ├── Questionnaire/
 │   ├── questionnaire1.yaml
 │   ├── questionnaire2.yaml
-│   └── sudbir/
+│   └── subdir/
 │       └── questionnaire3.yaml
 ```
+
+Use the `--input` flag to specify a custom input directory. For `export` and `watch` commands, `--input` can be passed multiple times to load resources from several directories.
 
 ## Environment variable substitution
 
@@ -44,32 +46,92 @@ NOTE: The syntax `$VAR` without braces is not supported because it might be used
 1. Organize resources in a directory
 
 ### Server
-1. Option A: Run a container
-    ```bash
-    docker run -p 8002:8000 -v ./resources:/app/resources bedasoftware/fhirsnake
-    ```
-2. Option B: Adjust source destination in `Dockerfile.resources` if required
-2.1. Build an image using the base image
-    ```bash
-    docker build -t fhirsnake-resources:latest -f Dockerfile.resources .
-    docker run -p 8000:8000 fhirsnake-resources 
-    ```
+
+```bash
+docker run \
+  -p 8002:8000 \
+  -v ./resources:/resources \
+  bedasoftware/fhirsnake server --input /resources
+```
+
+Or build a custom image with `Dockerfile.resources`:
+```bash
+docker build -t bedasoftware/fhirsnake -f Dockerfile.resources .
+docker run -p 8000:8000 fhirsnake-resources
+```
 
 ### Export
-1. Export resources as .json (Bundle) or .ndjson or ndjson.gz
-    ```bash
-    docker run -v ./resources:/app/resources -v ./output:/output bedasoftware/fhirsnake export --external-questionnaire-fce-fhir-converter-url=http://host.docker.internal:3000/to-fhir --output /output/seeds.ndjson.gz
-    ```
+
+Export resources as `.json` (Bundle), `.ndjson`, or `.ndjson.gz`:
+
+```bash
+docker run \
+  -v ./resources:/resources \
+  -v ./output:/output \
+  bedasoftware/fhirsnake export \
+    --input /resources \
+    --output /output/seeds.ndjson.gz
+```
+
+Multiple input directories:
+```bash
+docker run \
+  -v ./resources1:/resources1 \
+  -v ./resources2:/resources2 \
+  -v ./output:/output \
+  bedasoftware/fhirsnake export \
+    --input /resources1 \
+    --input /resources2 \
+    --output /output/seeds.ndjson.gz
+```
+
+With external FCE->FHIR converter:
+```bash
+docker run \
+  -v ./resources:/resources \
+  -v ./output:/output \
+  bedasoftware/fhirsnake export \
+    --input /resources \
+    --output /output/seeds.ndjson.gz \
+    --external-questionnaire-fce-fhir-converter-url http://host.docker.internal:3000/to-fhir
+```
 
 ### Watch
-1. Watch resources for changes and send as PUT requests to external fhir server
-    ```bash
-    docker run -v ./resources:/app/resources -v ./output:/output bedasoftware/fhirsnake watch --external-fhir-server-url http://host.docker.internal:8080 --external-fhir-server-header "Authorization: Token token" --external-questionnaire-fce-fhir-converter-url=http://host.docker.internal:3000/to-fhir
-    ```    
 
-### Using external questionnaire FCE->FHIR converter
+Watch resources for changes and send as PUT requests to an external FHIR server:
 
-There's an image `bedasoftware/questionnaire-fce-fhir-converter:latest` available that provides `/to-fhir` endpoint that can be used along with `--external-questionnaire-fce-fhir-converter-url` args for watch and export commands.
+```bash
+docker run \
+  -v ./resources:/resources \
+  bedasoftware/fhirsnake watch \
+    --input /resources \
+    --external-fhir-server-url http://host.docker.internal:8080
+```
+
+With auth headers:
+```bash
+docker run \
+  -v ./resources:/resources \
+  bedasoftware/fhirsnake watch \
+    --input /resources \
+    --external-fhir-server-url http://host.docker.internal:8080 \
+    --external-fhir-server-header "Authorization: Token token"
+```
+
+Multiple input directories:
+```bash
+docker run \
+  -v ./resources1:/resources1 \
+  -v ./resources2:/resources2 \
+  bedasoftware/fhirsnake watch \
+    --input /resources1 \
+    --input /resources2 \
+    --external-fhir-server-url http://host.docker.internal:8080
+```
+
+### External questionnaire FCE->FHIR converter
+
+The image `bedasoftware/questionnaire-fce-fhir-converter:latest` provides a `/to-fhir` endpoint that can be used with the `--external-questionnaire-fce-fhir-converter-url` flag in `export` and `watch` commands.
 
    
 ## Contribution and feedback

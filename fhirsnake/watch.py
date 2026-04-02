@@ -5,7 +5,6 @@ import time
 import requests
 from converter import convert_questionnaire_fce_to_fhir
 from files import load_resource
-from initial_resources import RESOURCE_DIR
 from utils import replace_urn_uuid_with_reference
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
@@ -26,9 +25,7 @@ class FileChangeHandler(FileSystemEventHandler):
         self.target_dir = target_dir
         self.external_fhir_server_url = external_fhir_server_url
         self.external_fhir_server_headers = external_fhir_server_headers
-        self.external_questionnaire_fce_fhir_converter_url = (
-            external_questionnaire_fce_fhir_converter_url
-        )
+        self.external_questionnaire_fce_fhir_converter_url = external_questionnaire_fce_fhir_converter_url
         super().__init__(*args, **kwargs)
 
     def on_modified(self, event):
@@ -46,10 +43,7 @@ class FileChangeHandler(FileSystemEventHandler):
             logging.error("Unable to load resource %s:\a\n%s", file_path, exc)
             return
 
-        if (
-            self.external_questionnaire_fce_fhir_converter_url
-            and resource["resourceType"] == "Questionnaire"
-        ):
+        if self.external_questionnaire_fce_fhir_converter_url and resource["resourceType"] == "Questionnaire":
             try:
                 resource = convert_questionnaire_fce_to_fhir(
                     resource, self.external_questionnaire_fce_fhir_converter_url
@@ -95,28 +89,29 @@ class FileChangeHandler(FileSystemEventHandler):
                     formatted_error,
                 )
             else:
-                logging.info(
-                    "Updated %s via %s (%s)", file_path, url, response.status_code
-                )
+                logging.info("Updated %s via %s (%s)", file_path, url, response.status_code)
         except requests.RequestException:
             logging.exception("Failed to PUT %s via %s", file_path, url)
 
 
 def start_watcher(
+    input_dirs: list[str],
     external_fhir_server_url: str,
     external_fhir_server_headers: dict[str, str],
     external_questionnaire_fce_fhir_converter_url: str | None,
 ):
-    event_handler = FileChangeHandler(
-        RESOURCE_DIR,
-        external_fhir_server_url,
-        external_fhir_server_headers,
-        external_questionnaire_fce_fhir_converter_url,
-    )
     observer = Observer()
-    observer.schedule(event_handler, RESOURCE_DIR, recursive=True)
+
+    for input_dir in input_dirs:
+        event_handler = FileChangeHandler(
+            input_dir,
+            external_fhir_server_url,
+            external_fhir_server_headers,
+            external_questionnaire_fce_fhir_converter_url,
+        )
+        observer.schedule(event_handler, input_dir, recursive=True)
     observer.start()
-    logging.info("Watching directory %s", RESOURCE_DIR)
+    logging.info("Watching directories %s", ", ".join(input_dirs))
 
     try:
         while True:

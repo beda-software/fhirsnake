@@ -2,16 +2,22 @@ import gzip
 import json
 
 import ndjson
-from converter import convert_resources
-from initial_resources import get_initial_resources
-from utils import substitute_env_vars
+
+from .converter import convert_resources
+from .files import load_resources
+from .utils import substitute_env_vars
 
 
-def export_resources(output: str, external_questionnaire_fce_fhir_converter_url: str | None) -> None:
+def export_resources(
+    input_dirs: list[str],
+    output: str,
+    external_questionnaire_fce_fhir_converter_url: str | None,
+) -> None:
     is_ndjson = "ndjson" in output
     gzipped = output.endswith(".gz")
-    resources_list = flatten_resources(get_initial_resources())
-
+    resources_list = []
+    for input_dir in input_dirs:
+        resources_list.extend(flatten_resources(load_resources(input_dir)))
     if external_questionnaire_fce_fhir_converter_url:
         resources_list = convert_resources(resources_list, external_questionnaire_fce_fhir_converter_url)
 
@@ -25,7 +31,10 @@ def export_resources(output: str, external_questionnaire_fce_fhir_converter_url:
                 "entry": [
                     {
                         "fullUrl": f"urn:uuid:{resource['resourceType']}:{resource['id']}",
-                        "request": {"method": "PUT", "url": f"/{resource['resourceType']}/{resource['id']}"},
+                        "request": {
+                            "method": "PUT",
+                            "url": f"/{resource['resourceType']}/{resource['id']}",
+                        },
                         "resource": resource,
                     }
                     for resource in resources_list

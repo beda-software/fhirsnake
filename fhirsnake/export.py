@@ -2,7 +2,7 @@ import gzip
 import json
 
 import ndjson
-from converter import convert_resources
+from converter import convert_resources, embed_mapping_into_resources
 from files import load_resources
 from utils import substitute_env_vars
 
@@ -11,12 +11,15 @@ def export_resources(
     input_dirs: list[str],
     output: str,
     external_questionnaire_fce_fhir_converter_url: str | None,
+    embed_mapping: bool = False,
 ) -> None:
     is_ndjson = "ndjson" in output
     gzipped = output.endswith(".gz")
     resources_list = []
     for input_dir in input_dirs:
         resources_list.extend(flatten_resources(load_resources(input_dir)))
+    if embed_mapping:
+        resources_list = embed_mapping_into_resources(resources_list)
     if external_questionnaire_fce_fhir_converter_url:
         resources_list = convert_resources(resources_list, external_questionnaire_fce_fhir_converter_url)
 

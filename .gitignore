@@ -9,3 +9,5 @@ dist
 # Versioning
 node_modules
 
+# Compiled files
+__pycache__

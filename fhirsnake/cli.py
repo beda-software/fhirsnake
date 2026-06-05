@@ -50,6 +50,12 @@ def main() -> None:
         help="External Questionnaire FCE FHIR Converter URL",
     )
     export_parser.add_argument(
+        "--embed-mapping",
+        action="store_true",
+        default=False,
+        help="Embed Mapping resources as JSON strings into Questionnaire extensions",
+    )
+    export_parser.add_argument(
         "--output",
         required=True,
         help="Specify the output filename",
@@ -80,6 +86,12 @@ def main() -> None:
         action="append",
         help="External FHIR Server header",
     )
+    watch_parser.add_argument(
+        "--embed-mapping",
+        action="store_true",
+        default=False,
+        help="Embed Mapping resources as JSON strings into Questionnaire extensions",
+    )
     args = parser.parse_args()
 
     if args.command == "server":
@@ -87,7 +99,10 @@ def main() -> None:
 
     if args.command == "export":
         export(
-            args.input or [default_input_dir_abs_path], args.output, args.external_questionnaire_fce_fhir_converter_url
+            args.input or [default_input_dir_abs_path],
+            args.output,
+            args.external_questionnaire_fce_fhir_converter_url,
+            args.embed_mapping,
         )
 
     if args.command == "watch":
@@ -96,6 +111,7 @@ def main() -> None:
             args.external_fhir_server_url,
             args.external_fhir_server_header,
             args.external_questionnaire_fce_fhir_converter_url,
+            args.embed_mapping,
         )
 
 
@@ -118,9 +134,10 @@ def export(
     input_dirs: list[str],
     output: str,
     external_questionnaire_fce_fhir_converter_url: str | None,
+    embed_mapping: bool = False,
 ):
     validate_input_dirs(input_dirs)
-    export_resources(input_dirs, output, external_questionnaire_fce_fhir_converter_url)
+    export_resources(input_dirs, output, external_questionnaire_fce_fhir_converter_url, embed_mapping)
 
 
 def watch(
@@ -128,10 +145,11 @@ def watch(
     url: str,
     headers_list: list[str] | None,
     external_questionnaire_fce_fhir_converter_url: str | None,
+    embed_mapping: bool = False,
 ):
     validate_input_dirs(input_dirs)
     headers = {v.split(":", 1)[0].strip(): v.split(":", 1)[1].strip() for v in (headers_list or [])}
-    start_watcher(input_dirs, url, headers, external_questionnaire_fce_fhir_converter_url)
+    start_watcher(input_dirs, url, headers, external_questionnaire_fce_fhir_converter_url, embed_mapping)
 
 
 if __name__ == "__main__":

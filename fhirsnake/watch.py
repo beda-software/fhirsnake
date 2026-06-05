@@ -3,7 +3,10 @@ import logging
 import time
 
 import requests
-from converter import convert_questionnaire_fce_to_fhir, embed_mapping_into_questionnaire
+from converter import (
+    convert_questionnaire_fce_to_fhir,
+    embed_mapping_into_questionnaire,
+)
 from files import load_resource, load_resources
 from utils import replace_urn_uuid_with_reference, substitute_env_vars
 from watchdog.events import FileSystemEventHandler
@@ -14,8 +17,14 @@ logging.basicConfig(level=logging.INFO)
 
 def _questionnaires_referencing_mapping(questionnaires: dict, mapping_id: str):
     for q in questionnaires.values():
-        for ref in q.get("mapping", []):
-            if isinstance(ref, dict) and ref.get("reference", "").split("/")[-1] == mapping_id:
+        for item in q.get("mapping", []):
+            if "valueReference" in item:
+                ref_str = item["valueReference"].get("reference", "")
+            elif "reference" in item:
+                ref_str = item.get("reference", "")
+            else:
+                continue
+            if ref_str.split("/")[-1] == mapping_id or ref_str.split(":")[-1] == mapping_id:
                 yield q
                 break
 
@@ -127,7 +136,13 @@ class FileChangeHandler(FileSystemEventHandler):
                     formatted_error,
                 )
             else:
-                logging.info("Updated %s/%s via %s (%s)", resource_type, resource_id, url, response.status_code)
+                logging.info(
+                    "Updated %s/%s via %s (%s)",
+                    resource_type,
+                    resource_id,
+                    url,
+                    response.status_code,
+                )
         except requests.RequestException:
             logging.exception("Failed to PUT %s/%s via %s", resource_type, resource_id, url)
 

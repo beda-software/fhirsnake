@@ -6,18 +6,43 @@ from utils import convert_uri_to_reference
 QUESTIONNAIRE_MAPPER_URL = "https://emr-core.beda.software/StructureDefinition/questionnaire-mapper"
 
 
+def _mapping_language(mapping: dict) -> str:
+    return "fpml" if mapping.get("type") == "FHIRPath" else "jute"
+
+
 def embed_mapping_into_questionnaire(questionnaire: dict, mappings_by_id: dict[str, dict]) -> dict:
     questionnaire = {**questionnaire}
     mapping_refs = questionnaire.pop("mapping", [])
     new_extensions = []
-    for ref in mapping_refs:
-        if isinstance(ref, str):
-            new_extensions.append({"url": QUESTIONNAIRE_MAPPER_URL, "valueString": ref})
-        elif isinstance(ref, dict) and "reference" in ref:
-            mapping_id = convert_uri_to_reference(ref["reference"]).split("/")[-1]
+    for item in mapping_refs:
+        if "valueExpression" in item:
+            new_extensions.append({"url": QUESTIONNAIRE_MAPPER_URL, "valueExpression": item["valueExpression"]})
+        elif "valueReference" in item:
+            ref_str = item["valueReference"].get("reference", "")
+            mapping_id = convert_uri_to_reference(ref_str).split("/")[-1]
             mapping = mappings_by_id.get(mapping_id)
             if mapping:
-                new_extensions.append({"url": QUESTIONNAIRE_MAPPER_URL, "valueString": json.dumps(mapping)})
+                new_extensions.append(
+                    {
+                        "url": QUESTIONNAIRE_MAPPER_URL,
+                        "valueExpression": {"language": _mapping_language(mapping), "expression": json.dumps(mapping)},
+                    }
+                )
+            else:
+                new_extensions.append({"url": QUESTIONNAIRE_MAPPER_URL, "valueReference": item["valueReference"]})
+        elif "reference" in item:
+            ref_str = item["reference"]
+            mapping_id = convert_uri_to_reference(ref_str).split("/")[-1]
+            mapping = mappings_by_id.get(mapping_id)
+            if mapping:
+                new_extensions.append(
+                    {
+                        "url": QUESTIONNAIRE_MAPPER_URL,
+                        "valueExpression": {"language": _mapping_language(mapping), "expression": json.dumps(mapping)},
+                    }
+                )
+            else:
+                new_extensions.append({"url": QUESTIONNAIRE_MAPPER_URL, "valueReference": {"reference": ref_str}})
     if new_extensions:
         questionnaire["extension"] = questionnaire.get("extension", []) + new_extensions
     return questionnaire

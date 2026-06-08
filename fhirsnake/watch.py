@@ -84,7 +84,7 @@ class FileChangeHandler(FileSystemEventHandler):
             self.all_resources.setdefault("Questionnaire", {})[resource_id] = resource
             resource = embed_mapping_into_questionnaire(resource, self.all_resources.get("Mapping", {}))
 
-        elif self.external_questionnaire_fce_fhir_converter_url and resource_type == "Questionnaire":
+        if self.external_questionnaire_fce_fhir_converter_url and resource_type == "Questionnaire":
             try:
                 resource = convert_questionnaire_fce_to_fhir(
                     resource, self.external_questionnaire_fce_fhir_converter_url

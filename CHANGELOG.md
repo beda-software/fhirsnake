@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/beda-software/fhirsnake/compare/v1.11.0...v1.11.1) (2026-06-08)
+
+
+### Bug Fixes
+
+* prevent bypassing convertion when embedding mappings ([d34690b](https://github.com/beda-software/fhirsnake/commit/d34690b1304e27f3bd80c1bb0226fc87c44003b6))
+
 # [1.11.0](https://github.com/beda-software/fhirsnake/compare/v1.10.1...v1.11.0) (2026-04-02)
 
 

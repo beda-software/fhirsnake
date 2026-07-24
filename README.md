@@ -25,6 +25,28 @@ resources/
 
 Use the `--input` flag to specify a custom input directory. For `export` and `watch` commands, `--input` can be passed multiple times to load resources from several directories.
 
+## Questionnaire language files
+
+Questionnaires that share the same `url` (or `id` when `url` is missing) and differ by `language` are merged into a single resource during `export` and `watch` startup.
+
+Rely only on `Questionnaire.language` and `Questionnaire.url` — filenames are ignored for grouping.
+
+- Baseline: `language` missing or `en` (defaults to `en` when omitted)
+- Variants: other languages (`de`, `fr`, …)
+- A single questionnaire per url/id is left unchanged
+- Flat and nested `item` trees in language files are both supported (`linkId` uniqueness)
+- Only baseline `linkId`s are translated; extra `linkId`s in a variant are skipped
+- Translations are stored as FHIR primitive extensions (`_text`, `_title`, `_description`) using `http://hl7.org/fhir/StructureDefinition/translation`
+
+Example layout:
+
+```markdown
+Questionnaire/
+  demo-questionnaire.yaml      # language: en (or omitted)
+  demo-questionnaire.de.yaml   # language: de
+  demo-questionnaire.fr.yaml   # language: fr (items may be flat)
+```
+
 ## Environment variable substitution
 
 To use environment variables in resources, you can use the syntax `${VAR_NAME}`.

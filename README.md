@@ -27,7 +27,7 @@ Use the `--input` flag to specify a custom input directory. For `export` and `wa
 
 ## Questionnaire language files
 
-Questionnaires that share the same `url` (or `id` when `url` is missing) and differ by `language` are merged into a single resource during `export` and `watch` startup.
+Questionnaires that share the same `url` (or `id` when `url` is missing) and differ by `language` are merged into a single resource during `export` and `watch` startup. On `watch`, editing any language file for a Questionnaire re-merges the group and PUTs the merged baseline resource.
 
 Rely only on `Questionnaire.language` and `Questionnaire.url` — filenames are ignored for grouping.
 

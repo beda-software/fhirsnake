@@ -8,7 +8,10 @@ from converter import (
     embed_mapping_into_questionnaire,
 )
 from files import load_resource, load_resources
-from questionnaire_language import merge_questionnaire_language_variants
+from questionnaire_language import (
+    merge_questionnaire_language_variants,
+    questionnaire_group_key,
+)
 from utils import replace_urn_uuid_with_reference, substitute_env_vars
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
@@ -39,6 +42,7 @@ class FileChangeHandler(FileSystemEventHandler):
         external_questionnaire_fce_fhir_converter_url: str | None,
         embed_mapping: bool = False,
         all_resources: dict | None = None,
+        raw_questionnaires: dict | None = None,
         *args,
         **kwargs,
     ) -> None:
@@ -48,6 +52,7 @@ class FileChangeHandler(FileSystemEventHandler):
         self.external_questionnaire_fce_fhir_converter_url = external_questionnaire_fce_fhir_converter_url
         self.embed_mapping = embed_mapping
         self.all_resources = all_resources if all_resources is not None else {}
+        self.raw_questionnaires = raw_questionnaires if raw_questionnaires is not None else {}
         super().__init__(*args, **kwargs)
 
     def on_modified(self, event):
@@ -81,8 +86,14 @@ class FileChangeHandler(FileSystemEventHandler):
                 self._send_resource(processed)
             return
 
+        if resource_type == "Questionnaire":
+            try:
+                resource = self._remerge_questionnaires(resource)
+            except Exception:
+                logging.exception("Unable to merge Questionnaire language variants for %s", file_path)
+                return
+
         if self.embed_mapping and resource_type == "Questionnaire":
-            self.all_resources.setdefault("Questionnaire", {})[resource_id] = resource
             resource = embed_mapping_into_questionnaire(resource, self.all_resources.get("Mapping", {}))
 
         if self.external_questionnaire_fce_fhir_converter_url and resource_type == "Questionnaire":
@@ -94,7 +105,22 @@ class FileChangeHandler(FileSystemEventHandler):
                 logging.exception("Unable to convert resource %s", file_path)
                 return
 
+        if resource_type != "Questionnaire":
+            self.all_resources.setdefault(resource_type, {})[resource_id] = resource
+
         self._send_resource(resource)
+
+    def _remerge_questionnaires(self, changed: dict) -> dict:
+        self.raw_questionnaires[changed["id"]] = changed
+        merged = merge_questionnaire_language_variants(list(self.raw_questionnaires.values()))
+        self.all_resources["Questionnaire"] = {q["id"]: q for q in merged}
+
+        group_key = questionnaire_group_key(changed)
+        for questionnaire in merged:
+            if questionnaire_group_key(questionnaire) == group_key:
+                return questionnaire
+
+        raise ValueError(f"Merged Questionnaire for group '{group_key}' was not found")
 
     def _send_resource(self, resource: dict):
         resource_type = resource["resourceType"]
@@ -155,14 +181,17 @@ def start_watcher(
     external_questionnaire_fce_fhir_converter_url: str | None,
     embed_mapping: bool = False,
 ):
+    raw_questionnaires: dict = {}
+    all_resources: dict = {}
+
     resources_list: list[dict] = []
     for input_dir in input_dirs:
-        for by_id in load_resources(input_dir).values():
+        for resource_type, by_id in load_resources(input_dir).items():
+            if resource_type == "Questionnaire":
+                raw_questionnaires.update(by_id)
             resources_list.extend(by_id.values())
-    resources_list = merge_questionnaire_language_variants(resources_list)
 
-    all_resources: dict = {}
-    for resource in resources_list:
+    for resource in merge_questionnaire_language_variants(resources_list):
         all_resources.setdefault(resource["resourceType"], {})[resource["id"]] = resource
 
     observer = Observer()
@@ -175,6 +204,7 @@ def start_watcher(
             external_questionnaire_fce_fhir_converter_url,
             embed_mapping=embed_mapping,
             all_resources=all_resources,
+            raw_questionnaires=raw_questionnaires,
         )
         observer.schedule(event_handler, input_dir, recursive=True)
     observer.start()

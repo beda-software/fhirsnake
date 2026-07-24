@@ -35,6 +35,11 @@ def _group_key(resource: dict) -> str:
     return resource.get("url") or resource["id"]
 
 
+def questionnaire_group_key(resource: dict) -> str:
+    """Return the key used to group Questionnaire language variants (url, else id)."""
+    return _group_key(resource)
+
+
 def _is_baseline_language(language: str | None) -> bool:
     return language is None or language == DEFAULT_BASELINE_LANGUAGE
 
@@ -82,9 +87,7 @@ def _apply_variant(baseline: dict, variant: dict, language: str, key: str) -> No
             _upsert_translation(baseline, field, language, content)
 
     texts_by_link_id = _collect_text_by_link_id(variant.get("item", []))
-    applied_link_ids = _apply_item_translations(
-        baseline.get("item", []), texts_by_link_id, language, key
-    )
+    applied_link_ids = _apply_item_translations(baseline.get("item", []), texts_by_link_id, language, key)
 
     skipped = set(texts_by_link_id) - applied_link_ids
     for link_id in sorted(skipped):
@@ -106,9 +109,7 @@ def _collect_text_by_link_id(items: list[dict]) -> dict[str, str]:
     return result
 
 
-def _apply_item_translations(
-    items: list[dict], texts_by_link_id: dict[str, str], language: str, key: str
-) -> set[str]:
+def _apply_item_translations(items: list[dict], texts_by_link_id: dict[str, str], language: str, key: str) -> set[str]:
     applied: set[str] = set()
     for item in items:
         link_id = item["linkId"]

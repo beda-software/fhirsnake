@@ -1,0 +1,15 @@
+resourceType: Questionnaire
+id: demo-questionnaire
+url: demo-questionnaire
+language: en
+status: active
+title: Demo questionnaire
+description: A short demo questionnaire for language merging
+item:
+  - type: group
+    linkId: group-1
+    text: Group 1
+    item:
+      - linkId: chief-complaint
+        type: string
+        text: Chief complaint

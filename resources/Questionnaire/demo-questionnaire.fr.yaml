@@ -1,0 +1,14 @@
+resourceType: Questionnaire
+id: demo-questionnaire.fr
+url: demo-questionnaire
+language: fr
+status: active
+title: Questionnaire de démonstration
+description: Un court questionnaire de démonstration pour la fusion de langues
+item:
+  - type: group
+    linkId: group-1
+    text: Groupe 1
+  - linkId: chief-complaint
+    type: string
+    text: Motif de consultation

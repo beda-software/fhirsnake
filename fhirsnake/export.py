@@ -4,6 +4,7 @@ import json
 import ndjson
 from converter import convert_resources, embed_mapping_into_resources
 from files import load_resources
+from questionnaire_language import merge_questionnaire_language_variants
 from utils import substitute_env_vars
 
 
@@ -18,6 +19,7 @@ def export_resources(
     resources_list = []
     for input_dir in input_dirs:
         resources_list.extend(flatten_resources(load_resources(input_dir)))
+    resources_list = merge_questionnaire_language_variants(resources_list)
     if embed_mapping:
         resources_list = embed_mapping_into_resources(resources_list)
     if external_questionnaire_fce_fhir_converter_url:

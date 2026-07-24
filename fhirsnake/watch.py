@@ -8,6 +8,7 @@ from converter import (
     embed_mapping_into_questionnaire,
 )
 from files import load_resource, load_resources
+from questionnaire_language import merge_questionnaire_language_variants
 from utils import replace_urn_uuid_with_reference, substitute_env_vars
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
@@ -154,11 +155,15 @@ def start_watcher(
     external_questionnaire_fce_fhir_converter_url: str | None,
     embed_mapping: bool = False,
 ):
+    resources_list: list[dict] = []
+    for input_dir in input_dirs:
+        for by_id in load_resources(input_dir).values():
+            resources_list.extend(by_id.values())
+    resources_list = merge_questionnaire_language_variants(resources_list)
+
     all_resources: dict = {}
-    if embed_mapping:
-        for input_dir in input_dirs:
-            for resource_type, by_id in load_resources(input_dir).items():
-                all_resources.setdefault(resource_type, {}).update(by_id)
+    for resource in resources_list:
+        all_resources.setdefault(resource["resourceType"], {})[resource["id"]] = resource
 
     observer = Observer()
 

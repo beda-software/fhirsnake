@@ -36,7 +36,8 @@ Rely only on `Questionnaire.language` and `Questionnaire.url` — filenames are 
 - A single questionnaire per url/id is left unchanged
 - Flat and nested `item` trees in language files are both supported (`linkId` uniqueness)
 - Only baseline `linkId`s are translated; extra `linkId`s in a variant are skipped
-- Translations are stored as FHIR primitive extensions (`_text`, `_title`, `_description`) using `http://hl7.org/fhir/StructureDefinition/translation`
+- Translations are stored as FHIR primitive extensions (`_text`, `_title`, `_description`, `_display` on `answerOption.valueCoding`) using `http://hl7.org/fhir/StructureDefinition/translation`
+- `answerOption` entries are matched by `valueCoding.code` alone; variant files may omit `system`
 
 Example layout:
 

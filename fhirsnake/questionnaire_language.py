@@ -12,7 +12,7 @@ def merge_questionnaire_language_variants(resources_list: list[dict]) -> list[di
 
     Non-Questionnaire resources and single-questionnaire groups pass through unchanged.
     Multiple language variants are combined into one baseline resource with FHIR translation
-    extensions on item.text, title, and description.
+    extensions on item.text, item.answerOption[].valueCoding.display, title, and description.
     """
     groups: dict[str, list[dict]] = defaultdict(list)
     non_questionnaires: list[dict] = []
@@ -86,10 +86,10 @@ def _apply_variant(baseline: dict, variant: dict, language: str, key: str) -> No
         if content is not None and field in baseline:
             _upsert_translation(baseline, field, language, content)
 
-    texts_by_link_id = _collect_text_by_link_id(variant.get("item", []))
-    applied_link_ids = _apply_item_translations(baseline.get("item", []), texts_by_link_id, language, key)
+    translations_by_link_id = _collect_translations_by_link_id(variant.get("item", []), language, key)
+    applied_link_ids = _apply_item_translations(baseline.get("item", []), translations_by_link_id, language, key)
 
-    skipped = set(texts_by_link_id) - applied_link_ids
+    skipped = set(translations_by_link_id) - applied_link_ids
     for link_id in sorted(skipped):
         logging.warning(
             "Skipping translation for linkId '%s' in language '%s' for Questionnaire '%s': "
@@ -100,29 +100,103 @@ def _apply_variant(baseline: dict, variant: dict, language: str, key: str) -> No
         )
 
 
-def _collect_text_by_link_id(items: list[dict]) -> dict[str, str]:
-    result: dict[str, str] = {}
+def _coding_key(coding: dict) -> str | None:
+    return coding.get("code")
+
+
+def _collect_translations_by_link_id(items: list[dict], language: str, key: str) -> dict[str, dict]:
+    result: dict[str, dict] = {}
     for item in items:
+        link_id = item["linkId"]
+        entry: dict = {}
         if "text" in item:
-            result[item["linkId"]] = item["text"]
-        result.update(_collect_text_by_link_id(item.get("item", [])))
+            entry["text"] = item["text"]
+
+        answer_options: dict[str, str] = {}
+        for option in item.get("answerOption", []):
+            coding = option.get("valueCoding")
+            if not coding:
+                continue
+            code = _coding_key(coding)
+            if not code:
+                logging.warning(
+                    "Skipping answerOption without code in linkId '%s' in language '%s' "
+                    "for Questionnaire '%s'",
+                    link_id,
+                    language,
+                    key,
+                )
+                continue
+            if "display" in coding:
+                answer_options[code] = coding["display"]
+
+        if answer_options:
+            entry["answerOption"] = answer_options
+
+        if entry:
+            result[link_id] = entry
+
+        result.update(_collect_translations_by_link_id(item.get("item", []), language, key))
     return result
 
 
-def _apply_item_translations(items: list[dict], texts_by_link_id: dict[str, str], language: str, key: str) -> set[str]:
+def _apply_item_translations(
+    items: list[dict],
+    translations_by_link_id: dict[str, dict],
+    language: str,
+    key: str,
+) -> set[str]:
     applied: set[str] = set()
     for item in items:
         link_id = item["linkId"]
-        if link_id in texts_by_link_id:
-            if "text" not in item:
-                raise ValueError(
-                    f"Questionnaire '{key}' baseline item '{link_id}' is missing 'text'; "
-                    f"add the origin text to the baseline resource before translating to '{language}'"
-                )
-            _upsert_translation(item, "text", language, texts_by_link_id[link_id])
+        if link_id in translations_by_link_id:
+            translations = translations_by_link_id[link_id]
+
+            if "text" in translations:
+                if "text" not in item:
+                    raise ValueError(
+                        f"Questionnaire '{key}' baseline item '{link_id}' is missing 'text'; "
+                        f"add the origin text to the baseline resource before translating to '{language}'"
+                    )
+                _upsert_translation(item, "text", language, translations["text"])
+
+            if "answerOption" in translations:
+                _apply_answer_option_translations(item, translations["answerOption"], language, key, link_id)
+
             applied.add(link_id)
-        applied.update(_apply_item_translations(item.get("item", []), texts_by_link_id, language, key))
+        applied.update(_apply_item_translations(item.get("item", []), translations_by_link_id, language, key))
     return applied
+
+
+def _apply_answer_option_translations(
+    item: dict,
+    option_displays: dict[str, str],
+    language: str,
+    key: str,
+    link_id: str,
+) -> None:
+    baseline_by_code: dict[str, dict] = {}
+    for option in item.get("answerOption", []):
+        coding = option.get("valueCoding")
+        if not coding:
+            continue
+        code = _coding_key(coding)
+        if code:
+            baseline_by_code[code] = coding
+
+    for code, display in option_displays.items():
+        coding = baseline_by_code.get(code)
+        if coding is None:
+            raise ValueError(
+                f"Questionnaire '{key}' baseline item '{link_id}' has no answerOption with code '{code}'; "
+                f"add the origin option to the baseline resource before translating to '{language}'"
+            )
+        if "display" not in coding:
+            raise ValueError(
+                f"Questionnaire '{key}' baseline item '{link_id}' answerOption '{code}' is missing 'display'; "
+                f"add the origin display to the baseline resource before translating to '{language}'"
+            )
+        _upsert_translation(coding, "display", language, display)
 
 
 def _upsert_translation(node: dict, field: str, language: str, content: str) -> None:

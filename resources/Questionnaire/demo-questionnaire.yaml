@@ -13,3 +13,15 @@ item:
       - linkId: chief-complaint
         type: string
         text: Chief complaint
+  - linkId: pain-level
+    type: choice
+    text: Pain level
+    answerOption:
+      - valueCoding:
+          code: mild
+          system: http://example.org/pain-level
+          display: Mild
+      - valueCoding:
+          code: severe
+          system: http://example.org/pain-level
+          display: Severe

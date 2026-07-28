@@ -12,3 +12,13 @@ item:
   - linkId: chief-complaint
     type: string
     text: Motif de consultation
+  - linkId: pain-level
+    type: choice
+    text: Niveau de douleur
+    answerOption:
+      - valueCoding:
+          code: severe
+          display: Sévère
+      - valueCoding:
+          code: mild
+          display: Léger

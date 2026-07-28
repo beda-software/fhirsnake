@@ -13,3 +13,13 @@ item:
       - linkId: chief-complaint
         type: string
         text: Hauptbeschwerde
+  - linkId: pain-level
+    type: choice
+    text: Schmerzintensität
+    answerOption:
+      - valueCoding:
+          code: mild
+          display: Leicht
+      - valueCoding:
+          code: severe
+          display: Schwer

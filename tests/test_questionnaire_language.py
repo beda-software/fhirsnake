@@ -12,6 +12,179 @@ from questionnaire_language import merge_questionnaire_language_variants
 
 RESOURCES_DIR = os.path.join(os.path.dirname(__file__), "..", "resources")
 
+PAIN_LEVEL_BASELINE = {
+    "linkId": "pain-level",
+    "type": "choice",
+    "text": "Pain level",
+    "answerOption": [
+        {
+            "valueCoding": {
+                "code": "mild",
+                "system": "http://example.org/pain-level",
+                "display": "Mild",
+            }
+        },
+        {
+            "valueCoding": {
+                "code": "severe",
+                "system": "http://example.org/pain-level",
+                "display": "Severe",
+            }
+        },
+    ],
+}
+
+PAIN_LEVEL_VARIANT_DE = {
+    "linkId": "pain-level",
+    "type": "choice",
+    "text": "Schmerzintensität",
+    "answerOption": [
+        {"valueCoding": {"code": "mild", "display": "Leicht"}},
+        {"valueCoding": {"code": "severe", "display": "Schwer"}},
+    ],
+}
+
+PAIN_LEVEL_VARIANT_FR = {
+    "linkId": "pain-level",
+    "type": "choice",
+    "text": "Niveau de douleur",
+    "answerOption": [
+        {"valueCoding": {"code": "severe", "display": "Sévère"}},
+        {"valueCoding": {"code": "mild", "display": "Léger"}},
+    ],
+}
+
+PAIN_LEVEL_MERGED_EN_DE = {
+    "linkId": "pain-level",
+    "type": "choice",
+    "text": "Pain level",
+    "_text": {
+        "extension": [
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                "extension": [
+                    {"url": "lang", "valueCode": "de"},
+                    {"url": "content", "valueString": "Schmerzintensität"},
+                ],
+            },
+        ]
+    },
+    "answerOption": [
+        {
+            "valueCoding": {
+                "code": "mild",
+                "system": "http://example.org/pain-level",
+                "display": "Mild",
+                "_display": {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                            "extension": [
+                                {"url": "lang", "valueCode": "de"},
+                                {"url": "content", "valueString": "Leicht"},
+                            ],
+                        },
+                    ]
+                },
+            }
+        },
+        {
+            "valueCoding": {
+                "code": "severe",
+                "system": "http://example.org/pain-level",
+                "display": "Severe",
+                "_display": {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                            "extension": [
+                                {"url": "lang", "valueCode": "de"},
+                                {"url": "content", "valueString": "Schwer"},
+                            ],
+                        },
+                    ]
+                },
+            }
+        },
+    ],
+}
+
+PAIN_LEVEL_MERGED_EN_DE_FR = {
+    "linkId": "pain-level",
+    "type": "choice",
+    "text": "Pain level",
+    "_text": {
+        "extension": [
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                "extension": [
+                    {"url": "lang", "valueCode": "de"},
+                    {"url": "content", "valueString": "Schmerzintensität"},
+                ],
+            },
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                "extension": [
+                    {"url": "lang", "valueCode": "fr"},
+                    {"url": "content", "valueString": "Niveau de douleur"},
+                ],
+            },
+        ]
+    },
+    "answerOption": [
+        {
+            "valueCoding": {
+                "code": "mild",
+                "system": "http://example.org/pain-level",
+                "display": "Mild",
+                "_display": {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                            "extension": [
+                                {"url": "lang", "valueCode": "de"},
+                                {"url": "content", "valueString": "Leicht"},
+                            ],
+                        },
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                            "extension": [
+                                {"url": "lang", "valueCode": "fr"},
+                                {"url": "content", "valueString": "Léger"},
+                            ],
+                        },
+                    ]
+                },
+            }
+        },
+        {
+            "valueCoding": {
+                "code": "severe",
+                "system": "http://example.org/pain-level",
+                "display": "Severe",
+                "_display": {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                            "extension": [
+                                {"url": "lang", "valueCode": "de"},
+                                {"url": "content", "valueString": "Schwer"},
+                            ],
+                        },
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                            "extension": [
+                                {"url": "lang", "valueCode": "fr"},
+                                {"url": "content", "valueString": "Sévère"},
+                            ],
+                        },
+                    ]
+                },
+            }
+        },
+    ],
+}
+
 BASELINE = {
     "resourceType": "Questionnaire",
     "id": "demo-questionnaire",
@@ -32,7 +205,8 @@ BASELINE = {
                     "text": "Chief complaint",
                 }
             ],
-        }
+        },
+        copy.deepcopy(PAIN_LEVEL_BASELINE),
     ],
 }
 
@@ -56,7 +230,8 @@ VARIANT_DE_NESTED = {
                     "text": "Hauptbeschwerde",
                 }
             ],
-        }
+        },
+        copy.deepcopy(PAIN_LEVEL_VARIANT_DE),
     ],
 }
 
@@ -79,6 +254,7 @@ VARIANT_FR_FLAT = {
             "type": "string",
             "text": "Motif de consultation",
         },
+        copy.deepcopy(PAIN_LEVEL_VARIANT_FR),
     ],
 }
 
@@ -177,7 +353,8 @@ MERGED_EN_DE_FR = {
                     },
                 }
             ],
-        }
+        },
+        copy.deepcopy(PAIN_LEVEL_MERGED_EN_DE_FR),
     ],
 }
 
@@ -245,7 +422,8 @@ MERGED_EN_DE = {
                     },
                 }
             ],
-        }
+        },
+        copy.deepcopy(PAIN_LEVEL_MERGED_EN_DE),
     ],
 }
 
@@ -310,6 +488,7 @@ class TestMergeQuestionnaireLanguageVariants:
             "item": [
                 {"type": "group", "linkId": "group-1", "text": "Gruppe 1"},
                 {"linkId": "chief-complaint", "type": "string", "text": "Hauptbeschwerde"},
+                copy.deepcopy(PAIN_LEVEL_VARIANT_DE),
             ],
         }
 
@@ -622,6 +801,370 @@ class TestMergeQuestionnaireLanguageVariants:
 
         with pytest.raises(ValueError, match="baseline item 'q1' is missing 'text'"):
             merge_questionnaire_language_variants([baseline, variant])
+
+    def test_raises_when_variant_answer_option_code_missing_from_baseline(self):
+        baseline = {
+            "resourceType": "Questionnaire",
+            "id": "demo",
+            "url": "demo",
+            "language": "en",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Pain level",
+                    "answerOption": [
+                        {"valueCoding": {"code": "mild", "display": "Mild"}},
+                    ],
+                }
+            ],
+        }
+        variant = {
+            "resourceType": "Questionnaire",
+            "id": "demo.de",
+            "url": "demo",
+            "language": "de",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Schmerzintensität",
+                    "answerOption": [
+                        {"valueCoding": {"code": "mild", "display": "Leicht"}},
+                        {"valueCoding": {"code": "unknown", "display": "Unbekannt"}},
+                    ],
+                }
+            ],
+        }
+
+        with pytest.raises(ValueError, match="has no answerOption with code 'unknown'"):
+            merge_questionnaire_language_variants([baseline, variant])
+
+    def test_raises_when_baseline_answer_option_missing_display(self):
+        baseline = {
+            "resourceType": "Questionnaire",
+            "id": "demo",
+            "url": "demo",
+            "language": "en",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Pain level",
+                    "answerOption": [
+                        {"valueCoding": {"code": "mild"}},
+                    ],
+                }
+            ],
+        }
+        variant = {
+            "resourceType": "Questionnaire",
+            "id": "demo.de",
+            "url": "demo",
+            "language": "de",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Schmerzintensität",
+                    "answerOption": [
+                        {"valueCoding": {"code": "mild", "display": "Leicht"}},
+                    ],
+                }
+            ],
+        }
+
+        with pytest.raises(ValueError, match="answerOption 'mild' is missing 'display'"):
+            merge_questionnaire_language_variants([baseline, variant])
+
+    def test_skips_variant_answer_option_without_code(self, caplog):
+        baseline = {
+            "resourceType": "Questionnaire",
+            "id": "demo",
+            "url": "demo",
+            "language": "en",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Pain level",
+                    "answerOption": [
+                        {"valueCoding": {"code": "mild", "display": "Mild"}},
+                    ],
+                }
+            ],
+        }
+        variant = {
+            "resourceType": "Questionnaire",
+            "id": "demo.de",
+            "url": "demo",
+            "language": "de",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Schmerzintensität",
+                    "answerOption": [
+                        {"valueCoding": {"code": "mild", "display": "Leicht"}},
+                        {"valueCoding": {"display": "Ohne Code"}},
+                    ],
+                }
+            ],
+        }
+
+        with caplog.at_level("WARNING"):
+            result = merge_questionnaire_language_variants([baseline, variant])
+
+        assert (
+            "Skipping answerOption without code in linkId 'pain-level' "
+            "in language 'de' for Questionnaire 'demo'"
+        ) in caplog.text
+        assert result[0]["item"][0]["answerOption"][0]["valueCoding"]["_display"]["extension"] == [
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                "extension": [
+                    {"url": "lang", "valueCode": "de"},
+                    {"url": "content", "valueString": "Leicht"},
+                ],
+            },
+        ]
+
+    def test_skips_baseline_answer_option_without_code(self):
+        baseline = {
+            "resourceType": "Questionnaire",
+            "id": "demo",
+            "url": "demo",
+            "language": "en",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Pain level",
+                    "answerOption": [
+                        {"valueCoding": {"display": "No code"}},
+                        {"valueCoding": {"code": "mild", "display": "Mild"}},
+                    ],
+                }
+            ],
+        }
+        variant = {
+            "resourceType": "Questionnaire",
+            "id": "demo.de",
+            "url": "demo",
+            "language": "de",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Schmerzintensität",
+                    "answerOption": [
+                        {"valueCoding": {"code": "mild", "display": "Leicht"}},
+                    ],
+                }
+            ],
+        }
+
+        result = merge_questionnaire_language_variants([baseline, variant])
+
+        assert result[0]["item"][0]["answerOption"][0] == {"valueCoding": {"display": "No code"}}
+        assert result[0]["item"][0]["answerOption"][1]["valueCoding"]["_display"]["extension"] == [
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                "extension": [
+                    {"url": "lang", "valueCode": "de"},
+                    {"url": "content", "valueString": "Leicht"},
+                ],
+            },
+        ]
+
+    def test_skips_answer_option_without_value_coding(self):
+        baseline = {
+            "resourceType": "Questionnaire",
+            "id": "demo",
+            "url": "demo",
+            "language": "en",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Pain level",
+                    "answerOption": [
+                        {"valueString": "free text"},
+                        {"valueCoding": {"code": "mild", "display": "Mild"}},
+                    ],
+                }
+            ],
+        }
+        variant = {
+            "resourceType": "Questionnaire",
+            "id": "demo.de",
+            "url": "demo",
+            "language": "de",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Schmerzintensität",
+                    "answerOption": [
+                        {"valueString": "freier Text"},
+                        {"valueCoding": {"code": "mild", "display": "Leicht"}},
+                    ],
+                }
+            ],
+        }
+
+        result = merge_questionnaire_language_variants([baseline, variant])
+
+        assert result[0]["item"][0]["answerOption"][0] == {"valueString": "free text"}
+        assert result[0]["item"][0]["answerOption"][1]["valueCoding"]["_display"]["extension"] == [
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                "extension": [
+                    {"url": "lang", "valueCode": "de"},
+                    {"url": "content", "valueString": "Leicht"},
+                ],
+            },
+        ]
+
+    def test_duplicate_answer_option_codes_use_last_display(self):
+        baseline = {
+            "resourceType": "Questionnaire",
+            "id": "demo",
+            "url": "demo",
+            "language": "en",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Pain level",
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "mild",
+                                "system": "http://example.org/a",
+                                "display": "Mild A",
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "mild",
+                                "system": "http://example.org/b",
+                                "display": "Mild B",
+                            }
+                        },
+                    ],
+                }
+            ],
+        }
+        variant = {
+            "resourceType": "Questionnaire",
+            "id": "demo.de",
+            "url": "demo",
+            "language": "de",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Schmerzintensität",
+                    "answerOption": [
+                        {"valueCoding": {"code": "mild", "display": "Leicht zuerst"}},
+                        {"valueCoding": {"code": "mild", "display": "Leicht zuletzt"}},
+                    ],
+                }
+            ],
+        }
+
+        result = merge_questionnaire_language_variants([baseline, variant])
+
+        options = result[0]["item"][0]["answerOption"]
+        assert options[0]["valueCoding"] == {
+            "code": "mild",
+            "system": "http://example.org/a",
+            "display": "Mild A",
+        }
+        assert options[1]["valueCoding"]["_display"]["extension"] == [
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                "extension": [
+                    {"url": "lang", "valueCode": "de"},
+                    {"url": "content", "valueString": "Leicht zuletzt"},
+                ],
+            },
+        ]
+
+    def test_matches_answer_option_by_code_ignoring_system(self):
+        baseline = {
+            "resourceType": "Questionnaire",
+            "id": "demo",
+            "url": "demo",
+            "language": "en",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Pain level",
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "mild",
+                                "system": "http://example.org/pain-level",
+                                "display": "Mild",
+                            }
+                        },
+                    ],
+                }
+            ],
+        }
+        variant = {
+            "resourceType": "Questionnaire",
+            "id": "demo.de",
+            "url": "demo",
+            "language": "de",
+            "status": "active",
+            "item": [
+                {
+                    "linkId": "pain-level",
+                    "type": "choice",
+                    "text": "Schmerzintensität",
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "mild",
+                                "system": "http://example.org/other-system",
+                                "display": "Leicht",
+                            }
+                        },
+                    ],
+                }
+            ],
+        }
+
+        result = merge_questionnaire_language_variants([baseline, variant])
+
+        coding = result[0]["item"][0]["answerOption"][0]["valueCoding"]
+        assert coding["system"] == "http://example.org/pain-level"
+        assert coding["_display"]["extension"] == [
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/translation",
+                "extension": [
+                    {"url": "lang", "valueCode": "de"},
+                    {"url": "content", "valueString": "Leicht"},
+                ],
+            },
+        ]
 
     def test_preserves_non_questionnaire_and_unrelated_questionnaires(self):
         patient = {"resourceType": "Patient", "id": "p1", "name": [{"family": "Doe"}]}

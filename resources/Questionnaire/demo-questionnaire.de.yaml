@@ -1,0 +1,25 @@
+resourceType: Questionnaire
+id: demo-questionnaire.de
+url: demo-questionnaire
+language: de
+status: active
+title: Demo-Fragebogen
+description: Ein kurzer Demo-Fragebogen für Sprachzusammenführung
+item:
+  - type: group
+    linkId: group-1
+    text: Gruppe 1
+    item:
+      - linkId: chief-complaint
+        type: string
+        text: Hauptbeschwerde
+  - linkId: pain-level
+    type: choice
+    text: Schmerzintensität
+    answerOption:
+      - valueCoding:
+          code: mild
+          display: Leicht
+      - valueCoding:
+          code: severe
+          display: Schwer

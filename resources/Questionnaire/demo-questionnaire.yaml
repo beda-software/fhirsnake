@@ -1,0 +1,27 @@
+resourceType: Questionnaire
+id: demo-questionnaire
+url: demo-questionnaire
+language: en
+status: active
+title: Demo questionnaire
+description: A short demo questionnaire for language merging
+item:
+  - type: group
+    linkId: group-1
+    text: Group 1
+    item:
+      - linkId: chief-complaint
+        type: string
+        text: Chief complaint
+  - linkId: pain-level
+    type: choice
+    text: Pain level
+    answerOption:
+      - valueCoding:
+          code: mild
+          system: http://example.org/pain-level
+          display: Mild
+      - valueCoding:
+          code: severe
+          system: http://example.org/pain-level
+          display: Severe

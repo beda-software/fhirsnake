@@ -1,3 +1,13 @@
+# [1.12.0](https://github.com/beda-software/fhirsnake/compare/v1.11.1...v1.12.0) (2026-07-29)
+
+
+### Features
+
+* add Questionnaire language variant merge ([5ebec07](https://github.com/beda-software/fhirsnake/commit/5ebec07808a1be83600af14ff49ae8a676536b43))
+* merge answerOption.valueCoding.display translations ([21629d1](https://github.com/beda-software/fhirsnake/commit/21629d19754f3f816ce212b2227ec9b19fd6a9d7))
+* merge language variants on export and watch startup ([1a34fc6](https://github.com/beda-software/fhirsnake/commit/1a34fc6ae7104b1a82d8c0b501a19f3814fb7749))
+* re-merge Questionnaire languages on watch file edits ([33a4e82](https://github.com/beda-software/fhirsnake/commit/33a4e82b22694589f8664b18cae5e1a89d9b1790))
+
 ## [1.11.1](https://github.com/beda-software/fhirsnake/compare/v1.11.0...v1.11.1) (2026-06-08)
 
 

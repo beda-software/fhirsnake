@@ -25,6 +25,8 @@ resources/
 
 Use the `--input` flag to specify a custom input directory. For `export` and `watch` commands, `--input` can be passed multiple times to load resources from several directories.
 
+The resource type always comes from the subdirectory name. By default the resource id is derived from the file name without extension (`Patient/example.yaml` → `Patient/example`); an `id` declared inside the file that differs from it is overridden with a warning. Pass `--prefer-resource-id` (available on `server`, `export`, and `watch`) to make the declared `id` win instead, still falling back to the filename-derived id when no `id` is declared. A declared `id` may contain an [environment variable placeholder](#environment-variable-substitution), which `export` resolves before building bundle entry URLs.
+
 ## Questionnaire language files
 
 Questionnaires that share the same `url` (or `id` when `url` is missing) and differ by `language` are merged into a single resource during `export` and `watch` startup. On `watch`, editing any language file for a Questionnaire re-merges the group and PUTs the merged baseline resource.

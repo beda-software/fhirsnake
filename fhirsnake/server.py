@@ -9,7 +9,7 @@ from files import load_resources
 logging.basicConfig(level=logging.INFO)
 
 
-def create_app(input_dir: str) -> FastAPI:
+def create_app(input_dir: str, prefer_resource_id: bool = False) -> FastAPI:
     app = FastAPI()
 
     if os.getenv("CORS_ALLOW_ALL", "false").lower() == "true":
@@ -23,7 +23,7 @@ def create_app(input_dir: str) -> FastAPI:
 
     @app.on_event("startup")
     async def load_app_data():
-        app.state.resources = load_resources(input_dir)
+        app.state.resources = load_resources(input_dir, prefer_resource_id)
 
     @app.get("/")
     def read_root():

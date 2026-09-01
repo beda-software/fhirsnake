@@ -41,6 +41,7 @@ class FileChangeHandler(FileSystemEventHandler):
         external_fhir_server_headers: dict[str, str],
         external_questionnaire_fce_fhir_converter_url: str | None,
         embed_mapping: bool = False,
+        prefer_resource_id: bool = False,
         all_resources: dict | None = None,
         raw_questionnaires: dict | None = None,
         *args,
@@ -51,6 +52,7 @@ class FileChangeHandler(FileSystemEventHandler):
         self.external_fhir_server_headers = external_fhir_server_headers
         self.external_questionnaire_fce_fhir_converter_url = external_questionnaire_fce_fhir_converter_url
         self.embed_mapping = embed_mapping
+        self.prefer_resource_id = prefer_resource_id
         self.all_resources = all_resources if all_resources is not None else {}
         self.raw_questionnaires = raw_questionnaires if raw_questionnaires is not None else {}
         super().__init__(*args, **kwargs)
@@ -65,7 +67,7 @@ class FileChangeHandler(FileSystemEventHandler):
 
     def process_file(self, file_path):
         try:
-            resource = load_resource(self.target_dir, file_path)
+            resource = load_resource(self.target_dir, file_path, self.prefer_resource_id)
         except Exception:
             logging.exception("Unable to load resource %s", file_path)
             return
@@ -180,13 +182,14 @@ def start_watcher(
     external_fhir_server_headers: dict[str, str],
     external_questionnaire_fce_fhir_converter_url: str | None,
     embed_mapping: bool = False,
+    prefer_resource_id: bool = False,
 ):
     raw_questionnaires: dict = {}
     all_resources: dict = {}
 
     resources_list: list[dict] = []
     for input_dir in input_dirs:
-        for resource_type, by_id in load_resources(input_dir).items():
+        for resource_type, by_id in load_resources(input_dir, prefer_resource_id).items():
             if resource_type == "Questionnaire":
                 raw_questionnaires.update(by_id)
             resources_list.extend(by_id.values())
@@ -203,6 +206,7 @@ def start_watcher(
             external_fhir_server_headers,
             external_questionnaire_fce_fhir_converter_url,
             embed_mapping=embed_mapping,
+            prefer_resource_id=prefer_resource_id,
             all_resources=all_resources,
             raw_questionnaires=raw_questionnaires,
         )

@@ -13,12 +13,13 @@ def export_resources(
     output: str,
     external_questionnaire_fce_fhir_converter_url: str | None,
     embed_mapping: bool = False,
+    prefer_resource_id: bool = False,
 ) -> None:
     is_ndjson = "ndjson" in output
     gzipped = output.endswith(".gz")
     resources_list = []
     for input_dir in input_dirs:
-        resources_list.extend(flatten_resources(load_resources(input_dir)))
+        resources_list.extend(flatten_resources(load_resources(input_dir, prefer_resource_id)))
     resources_list = merge_questionnaire_language_variants(resources_list)
     if embed_mapping:
         resources_list = embed_mapping_into_resources(resources_list)

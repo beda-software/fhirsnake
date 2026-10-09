@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/beda-software/fhirsnake/compare/v1.13.0...v1.13.1) (2026-10-09)
+
+
+### Bug Fixes
+
+* update dependencies and image packages to resolve CVEs ([d0715dc](https://github.com/beda-software/fhirsnake/commit/d0715dc0472cc4c49a3fae103d82850458985db6))
+
 # [1.12.0](https://github.com/beda-software/fhirsnake/compare/v1.11.1...v1.12.0) (2026-07-29)
 
 

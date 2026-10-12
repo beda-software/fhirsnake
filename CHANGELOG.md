@@ -1,3 +1,10 @@
+## [1.13.2](https://github.com/beda-software/fhirsnake/compare/v1.13.1...v1.13.2) (2026-10-12)
+
+
+### Bug Fixes
+
+* remove pip and setuptools from the runtime image ([f19513c](https://github.com/beda-software/fhirsnake/commit/f19513c8689480c76b85364d744e23882fb8115d))
+
 ## [1.13.1](https://github.com/beda-software/fhirsnake/compare/v1.13.0...v1.13.1) (2026-10-09)
 
 

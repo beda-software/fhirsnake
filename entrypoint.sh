@@ -1,2 +1,2 @@
 #!/bin/sh
-exec poetry run python3 cli.py "$@"
+exec python3 cli.py "$@"

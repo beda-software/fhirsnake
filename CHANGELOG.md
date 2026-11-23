@@ -1,3 +1,10 @@
+## [1.13.4](https://github.com/beda-software/fhirsnake/compare/v1.13.3...v1.13.4) (2026-11-23)
+
+
+### Bug Fixes
+
+* CVE findings in certifi ([8283898](https://github.com/beda-software/fhirsnake/commit/82838989bac5563f056ba328548b66e0000ec004))
+
 ## [1.13.3](https://github.com/beda-software/fhirsnake/compare/v1.13.2...v1.13.3) (2026-11-23)
 
 

@@ -4,6 +4,8 @@ import os
 
 import yaml
 
+YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
 
 def load_resources(root_path: str, prefer_resource_id: bool = False):
     resources = {}
@@ -40,7 +42,7 @@ def load_resource(root_path: str, abs_path: str, prefer_resource_id: bool = Fals
 
     with open(abs_path) as f:
         if file_ext in ("yaml", "yml"):
-            resource = yaml.safe_load(f)
+            resource = yaml.load(f, Loader=YAML_LOADER)
         elif file_ext == "json":
             resource = json.load(f)
         resource["resourceType"] = resource_type

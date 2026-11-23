@@ -1,3 +1,10 @@
+## [1.13.3](https://github.com/beda-software/fhirsnake/compare/v1.13.2...v1.13.3) (2026-11-23)
+
+
+### Performance Improvements
+
+* parse YAML resources with the libyaml C loader when available ([16226df](https://github.com/beda-software/fhirsnake/commit/16226df090eb03cf6fec34f8f369197f3ef18478))
+
 ## [1.13.2](https://github.com/beda-software/fhirsnake/compare/v1.13.1...v1.13.2) (2026-10-12)
 
 
